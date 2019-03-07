@@ -10,14 +10,14 @@ Adafruit_I2CRegister::Adafruit_I2CRegister(Adafruit_I2CDevice *device, uint16_t 
 
 
 bool Adafruit_I2CRegister::write(uint8_t *buffer, uint8_t len) {
-  uint8_t addrbuffer[2] = {_address & 0xFF, _address >> 8};
+  uint8_t addrbuffer[2] = {(uint8_t)(_address & 0xFF), (uint8_t)(_address>>8)};
   if (! _device->write(buffer, len, true, addrbuffer, _addrwidth)) {
     return false;
   }
   return true;
 }
 
-bool Adafruit_I2CRegister::write(uint32_t value, uint8_t numbytes=0) {
+bool Adafruit_I2CRegister::write(uint32_t value, uint8_t numbytes) {
   if (numbytes == 0) {
     numbytes = _width;
   }
@@ -41,9 +41,9 @@ uint32_t Adafruit_I2CRegister::read(void) {
   if (! read(_buffer, _width)) {
     return -1;
   }
-  
+
   uint32_t value = 0;
-   
+
    for (int i=0; i < _width; i++) {
      value <<= 8;
      if (_bitorder == MSBFIRST) {
@@ -52,7 +52,7 @@ uint32_t Adafruit_I2CRegister::read(void) {
        value |= _buffer[i];
      }
    }
-   
+
    return value;
 }
 
