@@ -16,6 +16,7 @@ class Adafruit_I2CRegister {
   bool read(uint8_t *value);
   bool read(uint16_t *value);
   bool read(uint32_t *value);
+  uint32_t read(void);
   bool write(uint8_t *buffer, uint8_t len);
   bool write(uint32_t value, uint8_t numbytes=0);
 

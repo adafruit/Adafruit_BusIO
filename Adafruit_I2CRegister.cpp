@@ -36,6 +36,27 @@ bool Adafruit_I2CRegister::write(uint32_t value, uint8_t numbytes=0) {
   return write(_buffer, numbytes);
 }
 
+// This does not do any error checking! returns 0xFFFFFFFF on failure
+uint32_t Adafruit_I2CRegister::read(void) {
+  if (! read(_buffer, _width)) {
+    return -1;
+  }
+  
+  uint32_t value = 0;
+   
+   for (int i=0; i < _width; i++) {
+     value <<= 8;
+     if (_bitorder == MSBFIRST) {
+       value |= _buffer[_width-i-1];
+     } else {
+       value |= _buffer[i];
+     }
+   }
+   
+   return value;
+}
+
+
 bool Adafruit_I2CRegister::read(uint8_t *buffer, uint8_t len) {
   _buffer[0] = _address;
   if (! _device->write_then_read(_buffer, 1, buffer, len)) {

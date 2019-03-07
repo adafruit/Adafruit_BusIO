@@ -30,8 +30,7 @@ void setup() {
 
   thresh_reg.write(~thresh);
 
-  thresh_reg.read(&thresh);
-  Serial.print("Post threshold register = 0x"); Serial.println(thresh, HEX);
+  Serial.print("Post threshold register = 0x"); Serial.println(thresh_reg.read(), HEX);
 }
 
 void loop() {
