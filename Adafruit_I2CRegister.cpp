@@ -46,7 +46,7 @@ uint32_t Adafruit_I2CRegister::read(void) {
 
    for (int i=0; i < _width; i++) {
      value <<= 8;
-     if (_bitorder == MSBFIRST) {
+     if (_bitorder == LSBFIRST) {
        value |= _buffer[_width-i-1];
      } else {
        value |= _buffer[i];
@@ -90,3 +90,41 @@ bool Adafruit_I2CRegister::read(uint8_t *value) {
   *value = _buffer[0];
   return true;
 }
+
+void Adafruit_I2CRegister::print(Stream *s) {
+  uint32_t val = read();
+  s->print("0x"); s->print(val, HEX);
+}
+
+void Adafruit_I2CRegister::println(Stream *s) {
+  print(s);
+  s->println();
+}
+
+
+Adafruit_I2CRegisterBits::Adafruit_I2CRegisterBits(Adafruit_I2CRegister *reg, uint8_t bits, uint8_t shift) {
+  _register = reg;
+  _bits = bits;
+  _shift = shift;
+}
+
+uint32_t Adafruit_I2CRegisterBits::read(void) {
+  uint32_t val = _register->read();
+  val >>= _shift;
+  return val & ((1 << (_bits+1)) - 1);
+}
+
+void Adafruit_I2CRegisterBits::write(uint32_t data) {
+  uint32_t val = _register->read();
+
+  // mask off the data before writing
+  uint32_t mask = (1 << (_bits+1)) - 1;
+  data &= mask;
+
+  mask <<= _shift;
+  val &= ~mask;      // remove the current data at that spot
+  val |= data << _shift; // and add in the new data
+  
+  _register->write(val, _register->width());
+}
+

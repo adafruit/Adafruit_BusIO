@@ -1,7 +1,7 @@
 #include <Adafruit_I2CDevice.h>
 #include <Arduino.h>
 
-#define DEBUG_SERIAL Serial
+//#define DEBUG_SERIAL Serial
 
 Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
   _addr = addr;
