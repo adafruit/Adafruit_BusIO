@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['read',['read',['../class_adafruit___bus_i_o___register.html#a2b48e23dacbb7cffc0eb07dcebcfba6f',1,'Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len)'],['../class_adafruit___bus_i_o___register.html#adca04654563a7c68a580533197366f61',1,'Adafruit_BusIO_Register::read(uint8_t *value)'],['../class_adafruit___bus_i_o___register.html#a5c49c498815a5414d6fb5915760bbeba',1,'Adafruit_BusIO_Register::read(uint16_t *value)'],['../class_adafruit___bus_i_o___register.html#a699434b2567ae8fce541b8048d891252',1,'Adafruit_BusIO_Register::read(void)'],['../class_adafruit___bus_i_o___register_bits.html#a868614bb793ae3c4c00b7954896213d0',1,'Adafruit_BusIO_RegisterBits::read()'],['../class_adafruit___i2_c_device.html#afeeccb3147b2f0340c65d2c0c1ce3ea6',1,'Adafruit_I2CDevice::read()'],['../class_adafruit___s_p_i_device.html#a5c4fce15c92a0210c0872a827f239ab1',1,'Adafruit_SPIDevice::read()']]]
+];
