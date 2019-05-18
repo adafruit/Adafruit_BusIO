@@ -7,7 +7,7 @@
  *    @brief  Create an SPI device with the given CS pin and settins
  *    @param  cspin The arduino pin number to use for chip select
  *    @param  freq The SPI clock frequency to use, defaults to 1MHz
- *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_MSBFIRST
+ *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST
  *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
  *    @param  theSPI The SPI bus to use, defaults to &theSPI
  */
@@ -29,7 +29,7 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dat
  *    @param  misopin The arduino pin number to use for MISO, set to -1 if not used
  *    @param  mosipin The arduino pin number to use for MOSI, set to -1 if not used
  *    @param  freq The SPI clock frequency to use, defaults to 1MHz
- *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_MSBFIRST
+ *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST
  *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
  */
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin, int8_t misopin, int8_t mosipin, 
@@ -97,7 +97,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     uint8_t reply = 0;
     uint8_t send = buffer[i];
 
-    if (_dataOrder == LSBFIRST) {
+    if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
       uint8_t temp = 0;
       for (uint8_t b=0; b<8; b++) {
@@ -125,7 +125,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
     }
 
-    if (_dataOrder == LSBFIRST) {
+    if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
       uint8_t temp = 0;
       for (uint8_t b=0; b<8; b++) {
