@@ -27,7 +27,7 @@ void setup() {
     }
   }
 
-  Adafruit_BusIO_Register id_reg = Adafruit_BusIO_Register(i2c_dev, spi_dev, 0x0F, ADDRBIT8_HIGH_TOREAD);
+  Adafruit_BusIO_Register id_reg = Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, 0x0F);
   uint8_t id;
   id_reg.read(&id);
   Serial.print("ID register = 0x"); Serial.println(id, HEX);

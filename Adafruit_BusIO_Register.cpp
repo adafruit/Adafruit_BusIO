@@ -23,7 +23,7 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice, 
 }
 
 Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, Adafruit_SPIDevice *spidevice, 
-						 uint16_t reg_addr, Adafruit_BusIO_SPIRegType type,
+						  Adafruit_BusIO_SPIRegType type, uint16_t reg_addr,
 						 uint8_t width, uint8_t bitorder, uint8_t address_width) {
   _spidevice = spidevice;
   _i2cdevice = i2cdevice;
