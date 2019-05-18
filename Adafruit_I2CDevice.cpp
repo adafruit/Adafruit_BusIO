@@ -18,7 +18,6 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
  *    @brief  Initializes and does basic address detection
  *    @return True if I2C initialized and a device with the addr found
  */
-
 bool Adafruit_I2CDevice::begin(void) {
   _wire->begin();
   _begun = true;
@@ -50,7 +49,7 @@ bool Adafruit_I2CDevice::detected(void) {
  *    @brief  Write a buffer or two to the I2C device. Cannot be more than 32 bytes.
  *    @param  buffer Pointer to buffer of data to write
  *    @param  len Number of bytes from buffer to write
- *    @param  prefix Pointer to optional array of data to write before buffer. Cannot be more than 32 bytes.
+ *    @param  prefix_buffer Pointer to optional array of data to write before buffer. Cannot be more than 32 bytes.
  *    @param  prefix_len Number of bytes from prefix buffer to write
  *    @param  stop Whether to send an I2C STOP signal on write
  *    @return True if write was successful, otherwise false.

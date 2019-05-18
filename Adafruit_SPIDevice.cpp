@@ -3,6 +3,14 @@
 
 //#define DEBUG_SERIAL Serial
 
+/*!
+ *    @brief  Create an SPI device with the given CS pin and settins
+ *    @param  cspin The arduino pin number to use for chip select
+ *    @param  freq The SPI clock frequency to use, defaults to 1MHz
+ *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_MSBFIRST
+ *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
+ *    @param  theSPI The SPI bus to use, defaults to &theSPI
+ */
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dataOrder, uint8_t dataMode, SPIClass *theSPI) {
   _cs = cspin;
   _spi = theSPI;
@@ -10,6 +18,10 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dat
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
 }
 
+/*!
+ *    @brief  Initializes SPI bus and sets CS pin high
+ *    @return Always returns true because there's no way to test success of SPI init
+ */
 bool Adafruit_SPIDevice::begin(void) {
   _spi->begin();
   pinMode(_cs, OUTPUT);
@@ -18,6 +30,14 @@ bool Adafruit_SPIDevice::begin(void) {
   return true;
 }
 
+/*!
+ *    @brief  Write a buffer or two to the SPI device.
+ *    @param  buffer Pointer to buffer of data to write
+ *    @param  len Number of bytes from buffer to write
+ *    @param  prefix_buffer Pointer to optional array of data to write before buffer.
+ *    @param  prefix_len Number of bytes from prefix buffer to write
+ *    @return Always returns true because there's no way to test success of SPI writes
+ */
 bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buffer, size_t prefix_len) {
   _spi->beginTransaction(*_spiSetting);
   digitalWrite(_cs, LOW);
@@ -55,6 +75,13 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buff
   return true;
 }
 
+/*!
+ *    @brief  Read from SPI into a buffer from the SPI device.
+ *    @param  buffer Pointer to buffer of data to read into
+ *    @param  len Number of bytes from buffer to read.
+ *    @param  sendvalue The 8-bits of data to write when doing the data read, defaults to 0xFF
+ *    @return Always returns true because there's no way to test success of SPI writes
+ */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   memset(buffer, sendvalue, len);  // clear out existing buffer
   _spi->beginTransaction(*_spiSetting);
@@ -80,7 +107,15 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 }
 
 
-
+/*!
+ *    @brief  Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!
+ *    @param  write_buffer Pointer to buffer of data to write from
+ *    @param  write_len Number of bytes from buffer to write.
+ *    @param  read_buffer Pointer to buffer of data to read into.
+ *    @param  read_len Number of bytes from buffer to read.
+ *    @param  sendvalue The 8-bits of data to write when doing the data read, defaults to 0xFF
+ *    @return Always returns true because there's no way to test success of SPI writes
+ */
 bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue) {
   _spi->beginTransaction(*_spiSetting);
   digitalWrite(_cs, LOW);
