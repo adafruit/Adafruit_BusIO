@@ -3,7 +3,7 @@
 #ifndef Adafruit_SPIDevice_h
 #define Adafruit_SPIDevice_h
 
-#if defined(__AVR__)       // modern SPI definitions have a BitOrder enum
+#if defined(__AVR__) || defined(ESP32) || defined(ESP8266)      // modern SPI definitions have a BitOrder enum
 typedef uint8_t BitOrder;
 #endif
 
