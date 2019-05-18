@@ -10,6 +10,9 @@ typedef enum _Adafruit_BusIO_SPIRegType {
   ADDRBIT8_HIGH_TOREAD = 0,
 } Adafruit_BusIO_SPIRegType;
 
+/*!
+ * @brief The class which defines a device register (a location to read/write data from)
+ */
 class Adafruit_BusIO_Register {
  public:
   Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, uint16_t reg_addr, 
@@ -30,12 +33,11 @@ class Adafruit_BusIO_Register {
   bool read(uint8_t *buffer, uint8_t len);
   bool read(uint8_t *value);
   bool read(uint16_t *value);
-  bool read(uint32_t *value);
   uint32_t read(void);
   bool write(uint8_t *buffer, uint8_t len);
   bool write(uint32_t value, uint8_t numbytes=0);
 
-  uint8_t width(void) { return _width; }
+  uint8_t width(void);
 
   void print(Stream *s=&Serial);
   void println(Stream *s=&Serial);
@@ -49,6 +51,10 @@ class Adafruit_BusIO_Register {
   uint8_t _buffer[4];      // we wont support anything larger than uint32 for non-buffered read
 };
 
+
+/*!
+ * @brief The class which defines a slice of bits from within a device register (a location to read/write data from)
+ */
 class Adafruit_BusIO_RegisterBits {
  public:
   Adafruit_BusIO_RegisterBits(Adafruit_BusIO_Register *reg, uint8_t bits, uint8_t shift);

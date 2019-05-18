@@ -10,6 +10,7 @@
   #define MSBFIRST SPI_MSBFIRST
 #endif
 
+///< The class which defines how we will talk to this device over SPI
 class Adafruit_SPIDevice {
  public:
   Adafruit_SPIDevice(int8_t cspin,
