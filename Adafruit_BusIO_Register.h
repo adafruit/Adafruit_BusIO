@@ -19,6 +19,14 @@ class Adafruit_BusIO_Register {
 			  Adafruit_BusIO_SPIRegType type,
 			  uint8_t width=1, uint8_t bitorder=LSBFIRST,
 			  uint8_t address_width=1); 
+
+  Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice,
+			  Adafruit_SPIDevice *spidevice, 
+			  uint16_t reg_addr, 
+			  Adafruit_BusIO_SPIRegType type,
+			  uint8_t width=1, uint8_t bitorder=LSBFIRST,
+			  uint8_t address_width=1); 
+
   bool read(uint8_t *buffer, uint8_t len);
   bool read(uint8_t *value);
   bool read(uint16_t *value);

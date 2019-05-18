@@ -22,6 +22,19 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice, 
   _width = width;
 }
 
+Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, Adafruit_SPIDevice *spidevice, 
+						 uint16_t reg_addr, Adafruit_BusIO_SPIRegType type,
+						 uint8_t width, uint8_t bitorder, uint8_t address_width) {
+  _spidevice = spidevice;
+  _i2cdevice = i2cdevice;
+  _spiregtype = type;
+  _addrwidth = address_width;
+  _address = reg_addr;
+  _bitorder = bitorder;
+  _width = width;
+}
+
+
 bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
 
   uint8_t addrbuffer[2] = {(uint8_t)(_address & 0xFF), (uint8_t)(_address>>8)};
