@@ -1,23 +1,34 @@
-#include <Adafruit_I2CRegister.h>
+#include <Adafruit_BusIO_Register.h>
 
-Adafruit_I2CRegister::Adafruit_I2CRegister(Adafruit_I2CDevice *device, uint16_t reg_addr, uint8_t width, uint8_t bitorder, uint8_t address_width) {
-  _device = device;
+Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, uint16_t reg_addr, uint8_t width, uint8_t bitorder, uint8_t address_width) {
+  _i2cdevice = i2cdevice;
+  _spidevice = NULL;
   _addrwidth = address_width;
   _address = reg_addr;
   _bitorder = bitorder;
   _width = width;
 }
 
+/*
+Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice, uint16_t reg_addr, uint8_t width, uint8_t bitorder, uint8_t address_width) {
+  _spidevice = spidevice;
+  _i2cdevice = NULL;
+  _addrwidth = address_width;
+  _address = reg_addr;
+  _bitorder = bitorder;
+  _width = width;
+}
+*/
 
-bool Adafruit_I2CRegister::write(uint8_t *buffer, uint8_t len) {
+bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
   uint8_t addrbuffer[2] = {(uint8_t)(_address & 0xFF), (uint8_t)(_address>>8)};
-  if (! _device->write(buffer, len, true, addrbuffer, _addrwidth)) {
+  if (_i2cdevice && ! _i2cdevice->write(buffer, len, true, addrbuffer, _addrwidth)) {
     return false;
   }
   return true;
 }
 
-bool Adafruit_I2CRegister::write(uint32_t value, uint8_t numbytes) {
+bool Adafruit_BusIO_Register::write(uint32_t value, uint8_t numbytes) {
   if (numbytes == 0) {
     numbytes = _width;
   }
@@ -37,7 +48,7 @@ bool Adafruit_I2CRegister::write(uint32_t value, uint8_t numbytes) {
 }
 
 // This does not do any error checking! returns 0xFFFFFFFF on failure
-uint32_t Adafruit_I2CRegister::read(void) {
+uint32_t Adafruit_BusIO_Register::read(void) {
   if (! read(_buffer, _width)) {
     return -1;
   }
@@ -57,15 +68,15 @@ uint32_t Adafruit_I2CRegister::read(void) {
 }
 
 
-bool Adafruit_I2CRegister::read(uint8_t *buffer, uint8_t len) {
+bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
   _buffer[0] = _address;
-  if (! _device->write_then_read(_buffer, 1, buffer, len)) {
+  if (_i2cdevice && ! _i2cdevice->write_then_read(_buffer, 1, buffer, len)) {
     return false;
   }
   return true;
 }
 
-bool Adafruit_I2CRegister::read(uint16_t *value) {
+bool Adafruit_BusIO_Register::read(uint16_t *value) {
   if (! read(_buffer, 2)) {
     return false;
   }
@@ -82,7 +93,7 @@ bool Adafruit_I2CRegister::read(uint16_t *value) {
   return true;
 }
 
-bool Adafruit_I2CRegister::read(uint8_t *value) {
+bool Adafruit_BusIO_Register::read(uint8_t *value) {
   if (! read(_buffer, 1)) {
     return false;
   }
@@ -91,30 +102,30 @@ bool Adafruit_I2CRegister::read(uint8_t *value) {
   return true;
 }
 
-void Adafruit_I2CRegister::print(Stream *s) {
+void Adafruit_BusIO_Register::print(Stream *s) {
   uint32_t val = read();
   s->print("0x"); s->print(val, HEX);
 }
 
-void Adafruit_I2CRegister::println(Stream *s) {
+void Adafruit_BusIO_Register::println(Stream *s) {
   print(s);
   s->println();
 }
 
 
-Adafruit_I2CRegisterBits::Adafruit_I2CRegisterBits(Adafruit_I2CRegister *reg, uint8_t bits, uint8_t shift) {
+Adafruit_BusIO_RegisterBits::Adafruit_BusIO_RegisterBits(Adafruit_BusIO_Register *reg, uint8_t bits, uint8_t shift) {
   _register = reg;
   _bits = bits;
   _shift = shift;
 }
 
-uint32_t Adafruit_I2CRegisterBits::read(void) {
+uint32_t Adafruit_BusIO_RegisterBits::read(void) {
   uint32_t val = _register->read();
   val >>= _shift;
   return val & ((1 << (_bits+1)) - 1);
 }
 
-void Adafruit_I2CRegisterBits::write(uint32_t data) {
+void Adafruit_BusIO_RegisterBits::write(uint32_t data) {
   uint32_t val = _register->read();
 
   // mask off the data before writing

@@ -1,14 +1,15 @@
 #include <Adafruit_I2CDevice.h>
+#include <Adafruit_SPIDevice.h>
 #include <Arduino.h>
 
 
-#ifndef Adafruit_I2CRegister_h
-#define Adafruit_I2CRegister_h
+#ifndef Adafruit_BusIO_Register_h
+#define Adafruit_BusIO_Register_h
 
 
-class Adafruit_I2CRegister {
+class Adafruit_BusIO_Register {
  public:
-  Adafruit_I2CRegister(Adafruit_I2CDevice *device, uint16_t reg_addr, 
+  Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, uint16_t reg_addr, 
 		       uint8_t width=1, uint8_t bitorder=LSBFIRST,
 		       uint8_t address_width=1); 
 
@@ -26,21 +27,22 @@ class Adafruit_I2CRegister {
   void println(Stream *s=&Serial);
 
  private:
-  Adafruit_I2CDevice *_device;
+  Adafruit_I2CDevice *_i2cdevice;
+  Adafruit_SPIDevice *_spidevice;
   uint16_t _address;
   uint8_t _width, _addrwidth, _bitorder;
   uint8_t _buffer[4];      // we wont support anything larger than uint32 for non-buffered read
 };
 
-class Adafruit_I2CRegisterBits {
+class Adafruit_BusIO_RegisterBits {
  public:
-  Adafruit_I2CRegisterBits(Adafruit_I2CRegister *reg, uint8_t bits, uint8_t shift);
+  Adafruit_BusIO_RegisterBits(Adafruit_BusIO_Register *reg, uint8_t bits, uint8_t shift);
   void write(uint32_t value);
   uint32_t read(void);
  private:
-  Adafruit_I2CRegister *_register;
+  Adafruit_BusIO_Register *_register;
   uint8_t _bits, _shift;
 };
 
 
-#endif //I2CRegister_h
+#endif //BusIO_Register_h
