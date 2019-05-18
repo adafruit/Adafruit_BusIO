@@ -3,13 +3,15 @@
 #ifndef Adafruit_SPIDevice_h
 #define Adafruit_SPIDevice_h
 
-#if defined(__AVR__) || defined(ESP8266)      // some modern SPI definitions don't have BitOrder enum
+// some modern SPI definitions don't have BitOrder enum
+#if defined(__AVR__) || defined(ESP8266)
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = MSBFIRST,
   SPI_BITORDER_LSBFIRST = LSBFIRST,
 } BitOrder;
 #endif
 
+// some modern SPI definitions don't have BitOrder enum and have different SPI mode defines
 #if defined(ESP32)
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = SPI_MSBFIRST,
@@ -18,7 +20,7 @@ typedef enum _BitOrder {
 #endif
 
 // Some platforms have a BitOrder enum but its named MSBFIRST/LSBFIRST
-#if defined(ARDUINO_ARCH_SAMD)
+#if defined(ARDUINO_ARCH_SAMD) || defined(__SAM3X8E__)
   #define SPI_BITORDER_MSBFIRST MSBFIRST
   #define SPI_BITORDER_LSBFIRST LSBFIRST
 #endif
