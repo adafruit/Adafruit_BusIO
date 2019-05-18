@@ -4,7 +4,7 @@
 #define Adafruit_SPIDevice_h
 
 // some modern SPI definitions don't have BitOrder enum
-#if defined(__AVR__) || defined(ESP8266)
+#if defined(__AVR__) || defined(ESP8266) || defined(TEENSYDUINO)
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = MSBFIRST,
   SPI_BITORDER_LSBFIRST = LSBFIRST,
