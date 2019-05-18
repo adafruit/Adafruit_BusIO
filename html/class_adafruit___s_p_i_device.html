@@ -73,9 +73,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a60008e93f6fe9fd6546a81352401860a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a60008e93f6fe9fd6546a81352401860a">Adafruit_SPIDevice</a> (int8_t cspin, uint32_t freq=1000000, BitOrder dataOrder=MSBFIRST, uint8_t dataMode=SPI_MODE0, SPIClass *theSPI=&amp;SPI)</td></tr>
-<tr class="memdesc:a60008e93f6fe9fd6546a81352401860a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an SPI device with the given CS pin and settins.  <a href="#a60008e93f6fe9fd6546a81352401860a">More...</a><br /></td></tr>
-<tr class="separator:a60008e93f6fe9fd6546a81352401860a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65e908127f448dc4b398e83022c9981c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a65e908127f448dc4b398e83022c9981c">Adafruit_SPIDevice</a> (int8_t cspin, uint32_t freq=1000000, BitOrder dataOrder=SPI_BITORDER_MSBFIRST, uint8_t dataMode=SPI_MODE0, SPIClass *theSPI=&amp;SPI)</td></tr>
+<tr class="memdesc:a65e908127f448dc4b398e83022c9981c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an SPI device with the given CS pin and settins.  <a href="#a65e908127f448dc4b398e83022c9981c">More...</a><br /></td></tr>
+<tr class="separator:a65e908127f448dc4b398e83022c9981c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeec71a4a8ea62b118967fda14aa8184c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#aeec71a4a8ea62b118967fda14aa8184c">Adafruit_SPIDevice</a> (int8_t cspin, int8_t sck, int8_t miso, int8_t mosi, uint32_t freq=1000000, BitOrder dataOrder=SPI_BITORDER_MSBFIRST, uint8_t dataMode=SPI_MODE0)</td></tr>
+<tr class="memdesc:aeec71a4a8ea62b118967fda14aa8184c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an SPI device with the given CS pin and settins.  <a href="#aeec71a4a8ea62b118967fda14aa8184c">More...</a><br /></td></tr>
+<tr class="separator:aeec71a4a8ea62b118967fda14aa8184c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa3c0bebb1d2d58516bce4f2dd1423f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a6aa3c0bebb1d2d58516bce4f2dd1423f">begin</a> (void)</td></tr>
 <tr class="memdesc:a6aa3c0bebb1d2d58516bce4f2dd1423f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes SPI bus and sets CS pin high.  <a href="#a6aa3c0bebb1d2d58516bce4f2dd1423f">More...</a><br /></td></tr>
 <tr class="separator:a6aa3c0bebb1d2d58516bce4f2dd1423f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -88,12 +91,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8128f7d67b3e0e56717279deb64227e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a8128f7d67b3e0e56717279deb64227e7">write_then_read</a> (uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue=0xFF)</td></tr>
 <tr class="memdesc:a8128f7d67b3e0e56717279deb64227e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!  <a href="#a8128f7d67b3e0e56717279deb64227e7">More...</a><br /></td></tr>
 <tr class="separator:a8128f7d67b3e0e56717279deb64227e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac60964386f37b2c498fc1b1540f61889"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889">transfer</a> (uint8_t send)</td></tr>
+<tr class="memdesc:ac60964386f37b2c498fc1b1540f61889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer (send/receive) one byte over hard/soft SPI.  <a href="#ac60964386f37b2c498fc1b1540f61889">More...</a><br /></td></tr>
+<tr class="separator:ac60964386f37b2c498fc1b1540f61889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a155f5efd84dbc240c987f4066265b840"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a155f5efd84dbc240c987f4066265b840">transfer</a> (uint8_t *buffer, size_t len)</td></tr>
+<tr class="memdesc:a155f5efd84dbc240c987f4066265b840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer (send/receive) one byte over hard/soft SPI.  <a href="#a155f5efd84dbc240c987f4066265b840">More...</a><br /></td></tr>
+<tr class="separator:a155f5efd84dbc240c987f4066265b840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>&lt; The class which defines how we will talk to this device over SPI </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a60008e93f6fe9fd6546a81352401860a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60008e93f6fe9fd6546a81352401860a">&#9670;&nbsp;</a></span>Adafruit_SPIDevice()</h2>
+<a id="a65e908127f448dc4b398e83022c9981c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65e908127f448dc4b398e83022c9981c">&#9670;&nbsp;</a></span>Adafruit_SPIDevice() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -114,7 +123,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">BitOrder&#160;</td>
-          <td class="paramname"><em>dataOrder</em> = <code>MSBFIRST</code>, </td>
+          <td class="paramname"><em>dataOrder</em> = <code>SPI_BITORDER_MSBFIRST</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -141,9 +150,81 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">cspin</td><td>The arduino pin number to use for chip select </td></tr>
     <tr><td class="paramname">freq</td><td>The SPI clock frequency to use, defaults to 1MHz </td></tr>
-    <tr><td class="paramname">dataOrder</td><td>The SPI data order to use for bits within each byte, defaults to SPI_MSBFIRST </td></tr>
+    <tr><td class="paramname">dataOrder</td><td>The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST </td></tr>
     <tr><td class="paramname">dataMode</td><td>The SPI mode to use, defaults to SPI_MODE0 </td></tr>
     <tr><td class="paramname">theSPI</td><td>The SPI bus to use, defaults to &amp;theSPI </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aeec71a4a8ea62b118967fda14aa8184c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeec71a4a8ea62b118967fda14aa8184c">&#9670;&nbsp;</a></span>Adafruit_SPIDevice() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Adafruit_SPIDevice::Adafruit_SPIDevice </td>
+          <td>(</td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>cspin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>sckpin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>misopin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>mosipin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>freq</em> = <code>1000000</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BitOrder&#160;</td>
+          <td class="paramname"><em>dataOrder</em> = <code>SPI_BITORDER_MSBFIRST</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>dataMode</em> = <code>SPI_MODE0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create an SPI device with the given CS pin and settins. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cspin</td><td>The arduino pin number to use for chip select </td></tr>
+    <tr><td class="paramname">sckpin</td><td>The arduino pin number to use for SCK </td></tr>
+    <tr><td class="paramname">misopin</td><td>The arduino pin number to use for MISO, set to -1 if not used </td></tr>
+    <tr><td class="paramname">mosipin</td><td>The arduino pin number to use for MOSI, set to -1 if not used </td></tr>
+    <tr><td class="paramname">freq</td><td>The SPI clock frequency to use, defaults to 1MHz </td></tr>
+    <tr><td class="paramname">dataOrder</td><td>The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST </td></tr>
+    <tr><td class="paramname">dataMode</td><td>The SPI mode to use, defaults to SPI_MODE0 </td></tr>
   </table>
   </dd>
 </dl>
@@ -325,6 +406,70 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Always returns true because there's no way to test success of SPI writes </dd></dl>
+
+</div>
+</div>
+<a id="ac60964386f37b2c498fc1b1540f61889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac60964386f37b2c498fc1b1540f61889">&#9670;&nbsp;</a></span>transfer() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Adafruit_SPIDevice::transfer </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>send</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transfer (send/receive) one byte over hard/soft SPI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">send</td><td>The byte to send </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The byte received while transmitting </dd></dl>
+
+</div>
+</div>
+<a id="a155f5efd84dbc240c987f4066265b840"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a155f5efd84dbc240c987f4066265b840">&#9670;&nbsp;</a></span>transfer() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Adafruit_SPIDevice::transfer </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transfer (send/receive) one byte over hard/soft SPI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>The buffer to send and receive at the same time </td></tr>
+    <tr><td class="paramname">len</td><td>The number of bytes to transfer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
