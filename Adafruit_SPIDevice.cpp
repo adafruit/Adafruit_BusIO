@@ -1,7 +1,7 @@
 #include <Adafruit_SPIDevice.h>
 #include <Arduino.h>
 
-#define DEBUG_SERIAL Serial
+//#define DEBUG_SERIAL Serial
 
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dataOrder, uint8_t dataMode, SPIClass *theSPI) {
   _cs = cspin;
