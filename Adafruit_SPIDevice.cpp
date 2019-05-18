@@ -59,7 +59,12 @@ bool Adafruit_SPIDevice::begin(void) {
     _spi->begin();
   } else {
     pinMode(_sck, OUTPUT);
-    digitalWrite(_sck, HIGH);
+
+    if (_dataMode==SPI_MODE0) {
+      digitalWrite(_sck, HIGH);
+    } else {
+      digitalWrite(_sck, LOW);
+    }
     if (_mosi != -1) {
       pinMode(_mosi, OUTPUT);
       digitalWrite(_mosi, HIGH);
@@ -102,11 +107,21 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     }
     for (int b=7; b>=0; b--) {
       reply <<= 1;
-      digitalWrite(_sck, LOW);
-      digitalWrite(_mosi, send & (1<<b));
-      digitalWrite(_sck, HIGH);
-      if ((_miso != -1) && digitalRead(_miso)) {
-	reply |= 1;
+      if (_dataMode == SPI_MODE0) {
+	digitalWrite(_sck, LOW);
+	digitalWrite(_mosi, send & (1<<b));
+	digitalWrite(_sck, HIGH);
+	if ((_miso != -1) && digitalRead(_miso)) {
+	  reply |= 1;
+	}
+      }
+      if (_dataMode == SPI_MODE1) {
+	digitalWrite(_sck, HIGH);
+	digitalWrite(_mosi, send & (1<<b));
+	digitalWrite(_sck, LOW);
+	if ((_miso != -1) && digitalRead(_miso)) {
+	  reply |= 1;
+	}
       }
     }
 
