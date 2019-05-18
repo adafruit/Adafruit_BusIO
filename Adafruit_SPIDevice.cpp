@@ -13,22 +13,130 @@
  */
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dataOrder, uint8_t dataMode, SPIClass *theSPI) {
   _cs = cspin;
+  _sck = _mosi = _miso = -1;
   _spi = theSPI;
   _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
+  _freq = freq;
+  _dataOrder = dataOrder;
+  _dataMode = dataMode;
 }
+
+/*!
+ *    @brief  Create an SPI device with the given CS pin and settins
+ *    @param  cspin The arduino pin number to use for chip select
+ *    @param  sckpin The arduino pin number to use for SCK
+ *    @param  misopin The arduino pin number to use for MISO, set to -1 if not used
+ *    @param  mosipin The arduino pin number to use for MOSI, set to -1 if not used
+ *    @param  freq The SPI clock frequency to use, defaults to 1MHz
+ *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_MSBFIRST
+ *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
+ */
+Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin, int8_t misopin, int8_t mosipin, 
+				       uint32_t freq, BitOrder dataOrder, uint8_t dataMode) {
+  _cs = cspin;
+  _sck = sckpin;
+  _miso = misopin;
+  _mosi = mosipin;
+  _freq = freq;
+  _dataOrder = dataOrder;
+  _dataMode = dataMode;
+  _begun = false;
+  _spiSetting = new SPISettings(freq, dataOrder, dataMode);
+  _spi = NULL;
+}
+
 
 /*!
  *    @brief  Initializes SPI bus and sets CS pin high
  *    @return Always returns true because there's no way to test success of SPI init
  */
 bool Adafruit_SPIDevice::begin(void) {
-  _spi->begin();
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH);
+
+  if (_spi) { // hardware SPI
+    _spi->begin();
+  } else {
+    pinMode(_sck, OUTPUT);
+    digitalWrite(_sck, HIGH);
+    if (_mosi != -1) {
+      pinMode(_mosi, OUTPUT);
+      digitalWrite(_mosi, HIGH);
+    }
+    if (_miso != -1) {
+      pinMode(_miso, INPUT);
+    }
+  }
+    
   _begun = true;
   return true;
 }
+
+
+/*!
+ *    @brief  Transfer (send/receive) one byte over hard/soft SPI
+ *    @param  buffer The buffer to send and receive at the same time
+ *    @param  len    The number of bytes to transfer
+ */
+void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
+  if (_spi) {
+    // hardware SPI is easy
+    _spi->transfer(buffer, len);
+    return;
+  }
+
+  // for softSPI we'll do it by hand
+  for (size_t i=0; i<len; i++) {
+    // software SPI
+    uint8_t reply = 0;
+    uint8_t send = buffer[i];
+
+    if (_dataOrder == LSBFIRST) {
+      // LSB is rare, if it happens we'll just flip the bits around for them
+      uint8_t temp = 0;
+      for (uint8_t b=0; b<8; b++) {
+	temp |= ((send >> b) & 0x1) << (7-b);
+      }
+      send = temp;
+    }
+    for (int b=7; b>=0; b--) {
+      reply <<= 1;
+      digitalWrite(_sck, LOW);
+      digitalWrite(_mosi, send & (1<<b));
+      digitalWrite(_sck, HIGH);
+      if ((_miso != -1) && digitalRead(_miso)) {
+	reply |= 1;
+      }
+    }
+
+    if (_dataOrder == LSBFIRST) {
+      // LSB is rare, if it happens we'll just flip the bits around for them
+      uint8_t temp = 0;
+      for (uint8_t b=0; b<8; b++) {
+	temp |= ((reply >> b) & 0x1) << (7-b);
+      }
+      reply = temp;
+    }
+
+    buffer[i] = reply;
+  }
+  return;
+}
+
+
+
+/*!
+ *    @brief  Transfer (send/receive) one byte over hard/soft SPI
+ *    @param  send The byte to send
+ *    @return The byte received while transmitting
+ */
+uint8_t Adafruit_SPIDevice::transfer(uint8_t send) {
+  uint8_t data = send;
+  transfer(&data, 1);
+  return data;
+}
+
 
 /*!
  *    @brief  Write a buffer or two to the SPI device.
@@ -39,18 +147,23 @@ bool Adafruit_SPIDevice::begin(void) {
  *    @return Always returns true because there's no way to test success of SPI writes
  */
 bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buffer, size_t prefix_len) {
-  _spi->beginTransaction(*_spiSetting);
+  if (_spi) {
+    _spi->beginTransaction(*_spiSetting);
+  }
+
   digitalWrite(_cs, LOW);
   // do the writing
   for (size_t i=0; i<prefix_len; i++) {
-    _spi->transfer(prefix_buffer[i]);
+    transfer(prefix_buffer[i]);
   }
   for (size_t i=0; i<len; i++) {
-    _spi->transfer(buffer[i]);
+    transfer(buffer[i]);
   }
   digitalWrite(_cs, HIGH);
-  _spi->endTransaction();
 
+  if (_spi) {
+    _spi->endTransaction();
+  }
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
@@ -84,11 +197,16 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buff
  */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   memset(buffer, sendvalue, len);  // clear out existing buffer
-  _spi->beginTransaction(*_spiSetting);
+  if (_spi) {
+    _spi->beginTransaction(*_spiSetting);
+  }
   digitalWrite(_cs, LOW);
-  _spi->transfer(buffer, len); 
+  transfer(buffer, len); 
   digitalWrite(_cs, HIGH);
-  _spi->endTransaction();
+
+  if (_spi) {
+    _spi->endTransaction();
+  }
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
@@ -117,11 +235,14 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
  *    @return Always returns true because there's no way to test success of SPI writes
  */
 bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue) {
-  _spi->beginTransaction(*_spiSetting);
+  if (_spi) {
+    _spi->beginTransaction(*_spiSetting);
+  }
+
   digitalWrite(_cs, LOW);
   // do the writing
   for (size_t i=0; i<write_len; i++) {
-    _spi->transfer(write_buffer[i]);
+    transfer(write_buffer[i]);
   }
 
 #ifdef DEBUG_SERIAL
@@ -139,7 +260,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
 
   // do the reading
   for (size_t i=0; i<read_len; i++) {
-    read_buffer[i] = _spi->transfer(sendvalue);
+    read_buffer[i] = transfer(sendvalue);
   }
 
 #ifdef DEBUG_SERIAL
@@ -156,7 +277,10 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
 #endif
 
   digitalWrite(_cs, HIGH);
-  _spi->endTransaction();
+
+  if (_spi) {
+    _spi->endTransaction();
+  }
 
   return true;
 }
