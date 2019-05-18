@@ -22,10 +22,10 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buff
   _spi->beginTransaction(*_spiSetting);
   digitalWrite(_cs, LOW);
   // do the writing
-  for (int i=0; i<prefix_len; i++) {
+  for (size_t i=0; i<prefix_len; i++) {
     _spi->transfer(prefix_buffer[i]);
   }
-  for (int i=0; i<len; i++) {
+  for (size_t i=0; i<len; i++) {
     _spi->transfer(buffer[i]);
   }
   digitalWrite(_cs, HIGH);
@@ -85,7 +85,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
   _spi->beginTransaction(*_spiSetting);
   digitalWrite(_cs, LOW);
   // do the writing
-  for (int i=0; i<write_len; i++) {
+  for (size_t i=0; i<write_len; i++) {
     _spi->transfer(write_buffer[i]);
   }
 
@@ -103,7 +103,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
 #endif
 
   // do the reading
-  for (int i=0; i<read_len; i++) {
+  for (size_t i=0; i<read_len; i++) {
     read_buffer[i] = _spi->transfer(sendvalue);
   }
 
