@@ -20,7 +20,7 @@ typedef enum _BitOrder {
 #endif
 
 // Some platforms have a BitOrder enum but its named MSBFIRST/LSBFIRST
-#if defined(ARDUINO_ARCH_SAMD) || defined(__SAM3X8E__)
+#if defined(ARDUINO_ARCH_SAMD) || defined(__SAM3X8E__) || defined(ARDUINO_ARCH_NRF52)
   #define SPI_BITORDER_MSBFIRST MSBFIRST
   #define SPI_BITORDER_LSBFIRST LSBFIRST
 #endif
