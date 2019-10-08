@@ -79,9 +79,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae02c4691dbe893c3a5a3de478d776062"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#ae02c4691dbe893c3a5a3de478d776062">address</a> (void)</td></tr>
 <tr class="memdesc:ae02c4691dbe893c3a5a3de478d776062"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the 7-bit address of this device.  <a href="#ae02c4691dbe893c3a5a3de478d776062">More...</a><br /></td></tr>
 <tr class="separator:ae02c4691dbe893c3a5a3de478d776062"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14ebb7e821697ed9391ac838a0f29582"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a14ebb7e821697ed9391ac838a0f29582">begin</a> (void)</td></tr>
-<tr class="memdesc:a14ebb7e821697ed9391ac838a0f29582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes and does basic address detection.  <a href="#a14ebb7e821697ed9391ac838a0f29582">More...</a><br /></td></tr>
-<tr class="separator:a14ebb7e821697ed9391ac838a0f29582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada579d107621ac5f5e56f91f94a93be3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#ada579d107621ac5f5e56f91f94a93be3">begin</a> (bool addr_detect=true)</td></tr>
+<tr class="memdesc:ada579d107621ac5f5e56f91f94a93be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes and does basic address detection.  <a href="#ada579d107621ac5f5e56f91f94a93be3">More...</a><br /></td></tr>
+<tr class="separator:ada579d107621ac5f5e56f91f94a93be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7492b543fe4c0bb0d94a7bf1915cb2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#ac7492b543fe4c0bb0d94a7bf1915cb2a">detected</a> (void)</td></tr>
 <tr class="memdesc:ac7492b543fe4c0bb0d94a7bf1915cb2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans I2C for the address - note will give a false-positive if there's no pullups on I2C.  <a href="#ac7492b543fe4c0bb0d94a7bf1915cb2a">More...</a><br /></td></tr>
 <tr class="separator:ac7492b543fe4c0bb0d94a7bf1915cb2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,8 +157,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a14ebb7e821697ed9391ac838a0f29582"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14ebb7e821697ed9391ac838a0f29582">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="ada579d107621ac5f5e56f91f94a93be3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada579d107621ac5f5e56f91f94a93be3">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -166,14 +166,20 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool Adafruit_I2CDevice::begin </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>addr_detect</em> = <code>true</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Initializes and does basic address detection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr_detect</td><td>Whether we should attempt to detect the I2C address with a scan. 99% of sensors/devices don't mind but once in a while, they spaz on a scan! </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>True if I2C initialized and a device with the addr found </dd></dl>
 
 </div>
