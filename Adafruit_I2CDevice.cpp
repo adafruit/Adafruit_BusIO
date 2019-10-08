@@ -16,13 +16,18 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
 
 /*!
  *    @brief  Initializes and does basic address detection
+ *    @param  addr_detect Whether we should attempt to detect the I2C address with a scan.
+ *            99% of sensors/devices don't mind but once in a while, they spaz on a scan!
  *    @return True if I2C initialized and a device with the addr found
  */
-bool Adafruit_I2CDevice::begin(void) {
+bool Adafruit_I2CDevice::begin(bool addr_detect) {
   _wire->begin();
   _begun = true;
-
-  return detected();
+  
+  if (addr_detect) {
+    return detected();
+  }
+  return true;
 }
 
 
@@ -105,8 +110,21 @@ bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop, uint8_t *
   DEBUG_SERIAL.println();
 #endif
 
+#ifdef DEBUG_SERIAL
+  DEBUG_SERIAL.print("Stop: "); DEBUG_SERIAL.println(stop);
+#endif
 
-  return (_wire -> endTransmission(stop) == 0);
+  if (_wire->endTransmission(stop) == 0) {
+#ifdef DEBUG_SERIAL
+    DEBUG_SERIAL.println("Sent!");
+#endif
+    return true;
+  } else {
+#ifdef DEBUG_SERIAL
+    DEBUG_SERIAL.println("Failed to send!");
+#endif
+    return false;
+  }
 }
 
 
