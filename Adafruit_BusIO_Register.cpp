@@ -229,7 +229,7 @@ Adafruit_BusIO_RegisterBits::Adafruit_BusIO_RegisterBits(Adafruit_BusIO_Register
 uint32_t Adafruit_BusIO_RegisterBits::read(void) {
   uint32_t val = _register->read();
   val >>= _shift;
-  return val & ((1 << (_bits+1)) - 1);
+  return val & ((1 << (_bits)) - 1);
 }
 
 
@@ -241,7 +241,7 @@ void Adafruit_BusIO_RegisterBits::write(uint32_t data) {
   uint32_t val = _register->read();
 
   // mask off the data before writing
-  uint32_t mask = (1 << (_bits+1)) - 1;
+  uint32_t mask = (1 << (_bits)) - 1;
   data &= mask;
 
   mask <<= _shift;
