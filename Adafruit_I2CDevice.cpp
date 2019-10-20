@@ -12,6 +12,11 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
   _addr = addr;
   _wire = theWire;
   _begun = false;
+#ifdef ARDUINO_ARCH_SAMD
+  _maxBufferSize = 250; // as defined in Wire.h's RingBuffer
+#else
+  _maxBufferSize = 32;
+#endif
 }
 
 /*!
@@ -51,16 +56,17 @@ bool Adafruit_I2CDevice::detected(void) {
 }
 
 /*!
- *    @brief  Write a buffer or two to the I2C device. Cannot be more than 32 bytes.
+ *    @brief  Write a buffer or two to the I2C device. Cannot be more than maxBufferSize() bytes.
  *    @param  buffer Pointer to buffer of data to write
  *    @param  len Number of bytes from buffer to write
- *    @param  prefix_buffer Pointer to optional array of data to write before buffer. Cannot be more than 32 bytes.
+ *    @param  prefix_buffer Pointer to optional array of data to write before buffer. 
+ *    Cannot be more than maxBufferSize() bytes.
  *    @param  prefix_len Number of bytes from prefix buffer to write
  *    @param  stop Whether to send an I2C STOP signal on write
  *    @return True if write was successful, otherwise false.
  */
 bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop, uint8_t *prefix_buffer, size_t prefix_len) {
-  if ((len+prefix_len) > 32) {
+  if ((len+prefix_len) > maxBufferSize()) {
     // currently not guaranteed to work if more than 32 bytes!
     // we will need to find out if some platforms have larger
     // I2C buffer sizes :/
@@ -129,14 +135,15 @@ bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop, uint8_t *
 
 
 /*!
- *    @brief  Read from I2C into a buffer from the I2C device. Cannot be more than 32 bytes.
+ *    @brief  Read from I2C into a buffer from the I2C device. 
+ *    Cannot be more than maxBufferSize() bytes.
  *    @param  buffer Pointer to buffer of data to read into
  *    @param  len Number of bytes from buffer to read.
  *    @param  stop Whether to send an I2C STOP signal on read
  *    @return True if read was successful, otherwise false.
  */
 bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
-  if (len > 32) {
+  if (len > maxBufferSize()) {
     // currently not guaranteed to work if more than 32 bytes!
     // we will need to find out if some platforms have larger
     // I2C buffer sizes :/
@@ -146,10 +153,12 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
     return false;
   }
 
-  if (_wire->requestFrom((uint8_t)_addr, (uint8_t)len, (uint8_t)stop) != len) {
+  size_t recv = _wire->requestFrom((uint8_t)_addr, (uint8_t)len, (uint8_t)stop);
+  if (recv != len) {
     // Not enough data available to fulfill our obligation!
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println(F("\tI2CDevice did not receive enough data"));
+    DEBUG_SERIAL.print(F("\tI2CDevice did not receive enough data: "));
+    DEBUG_SERIAL.println(recv);
 #endif
     return false;
   }
@@ -176,7 +185,9 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
 
 
 /*!
- *    @brief  Write some data, then read some data from I2C into another buffer. Cannot be more than 32 bytes. The buffers can point to same/overlapping locations.
+ *    @brief  Write some data, then read some data from I2C into another buffer. 
+ *    Cannot be more than maxBufferSize() bytes. The buffers can point to 
+ *    same/overlapping locations.
  *    @param  write_buffer Pointer to buffer of data to write from
  *    @param  write_len Number of bytes from buffer to write.
  *    @param  read_buffer Pointer to buffer of data to read into.

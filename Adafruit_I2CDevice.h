@@ -15,12 +15,15 @@ class Adafruit_I2CDevice {
   bool write(uint8_t *buffer, size_t len, bool stop=true, uint8_t *prefix_buffer=NULL, size_t prefix_len=0);
   bool write_then_read(uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, bool stop=false);
 
+  /*!   @brief  How many bytes we can read in a transaction
+   *    @return The size of the Wire receive/transmit buffer */  
+  uint16_t maxBufferSize() { return _maxBufferSize; }
 
  private:
   uint8_t _addr;
   TwoWire *_wire;
   bool _begun;
-
+  uint16_t _maxBufferSize;
 };
 
 #endif // Adafruit_I2CDevice_h
