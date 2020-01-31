@@ -99,7 +99,10 @@ bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop,
   }
 
 #ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tI2CDevice Wrote: "));
+
+  DEBUG_SERIAL.print(F("\tI2CWRITE @ 0x"));
+  DEBUG_SERIAL.print(_addr, HEX);
+  DEBUG_SERIAL.print(F(" :: "));
   if ((prefix_len != 0) && (prefix_buffer != NULL)) {
     for (uint16_t i = 0; i < prefix_len; i++) {
       DEBUG_SERIAL.print(F("0x"));
@@ -169,7 +172,9 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
   }
 
 #ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tI2CDevice Read: "));
+  DEBUG_SERIAL.print(F("\tI2CREAD  @ 0x"));
+  DEBUG_SERIAL.print(_addr, HEX);
+  DEBUG_SERIAL.print(F(" :: "));
   for (uint16_t i = 0; i < len; i++) {
     DEBUG_SERIAL.print(F("0x"));
     DEBUG_SERIAL.print(buffer[i], HEX);
