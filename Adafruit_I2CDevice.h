@@ -20,13 +20,13 @@ public:
 
   /*!   @brief  How many bytes we can read in a transaction
    *    @return The size of the Wire receive/transmit buffer */
-  uint16_t maxBufferSize() { return _maxBufferSize; }
+  size_t maxBufferSize() { return _maxBufferSize; }
 
 private:
   uint8_t _addr;
   TwoWire *_wire;
   bool _begun;
-  uint16_t _maxBufferSize;
+  size_t _maxBufferSize;
 };
 
 #endif // Adafruit_I2CDevice_h
