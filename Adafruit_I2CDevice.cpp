@@ -197,17 +197,17 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
  *    @param  write_len Number of bytes from buffer to write.
  *    @param  read_buffer Pointer to buffer of data to read into.
  *    @param  read_len Number of bytes from buffer to read.
- *    @param  stop Whether to send an I2C STOP signal between the write and read
+ *    @param  stop Whether to send an I2C STOP signal after the read.
  *    @return True if write & read was successful, otherwise false.
  */
 bool Adafruit_I2CDevice::write_then_read(uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, bool stop) {
-  if (!write(write_buffer, write_len, stop)) {
+  if (!write(write_buffer, write_len, false)) {
     return false;
   }
 
-  return read(read_buffer, read_len);
+  return read(read_buffer, read_len, stop);
 }
 
 /*!

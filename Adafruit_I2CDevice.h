@@ -16,7 +16,7 @@ public:
              uint8_t *prefix_buffer = NULL, size_t prefix_len = 0);
   bool write_then_read(uint8_t *write_buffer, size_t write_len,
                        uint8_t *read_buffer, size_t read_len,
-                       bool stop = false);
+                       bool stop = true);
 
   /*!   @brief  How many bytes we can read in a transaction
    *    @return The size of the Wire receive/transmit buffer */
