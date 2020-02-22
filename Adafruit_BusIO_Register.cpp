@@ -273,6 +273,8 @@ uint32_t Adafruit_BusIO_RegisterBits::read(void) {
 /*!
  *    @brief  Write 4 bytes of data to the register
  *    @param  data The 4 bytes to write
+ *    @return True on successful write (only really useful for I2C as SPI is
+ * uncheckable)
  */
 bool Adafruit_BusIO_RegisterBits::write(uint32_t data) {
   uint32_t val = _register->read();
