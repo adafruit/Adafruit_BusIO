@@ -60,7 +60,7 @@ class Adafruit_BusIO_RegisterBits {
 public:
   Adafruit_BusIO_RegisterBits(Adafruit_BusIO_Register *reg, uint8_t bits,
                               uint8_t shift);
-  void write(uint32_t value);
+  bool write(uint32_t value);
   uint32_t read(void);
 
 private:
