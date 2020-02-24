@@ -68,10 +68,12 @@ bool Adafruit_SPIDevice::begin(void) {
   } else {
     pinMode(_sck, OUTPUT);
 
-    if (_dataMode == SPI_MODE0) {
-      digitalWrite(_sck, HIGH);
-    } else {
+    if ((_dataMode == SPI_MODE0) || (_dataMode == SPI_MODE1)) {
+      // idle low on mode 0 and 1
       digitalWrite(_sck, LOW);
+    } else {
+      // idle high on mode 2 or 3
+      digitalWrite(_sck, HIGH);
     }
     if (_mosi != -1) {
       pinMode(_mosi, OUTPUT);
@@ -104,6 +106,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     uint8_t reply = 0;
     uint8_t send = buffer[i];
 
+    /*
+    Serial.print("\tSending software SPI byte 0x");
+    Serial.print(send, HEX);
+    Serial.print(" -> 0x");
+    */
+
     if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
       uint8_t temp = 0;
@@ -112,15 +120,16 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
       send = temp;
     }
+    //Serial.print(send, HEX);
     for (int b = 7; b >= 0; b--) {
       reply <<= 1;
       if (_dataMode == SPI_MODE0) {
-        digitalWrite(_sck, LOW);
         digitalWrite(_mosi, send & (1 << b));
         digitalWrite(_sck, HIGH);
         if ((_miso != -1) && digitalRead(_miso)) {
           reply |= 1;
         }
+        digitalWrite(_sck, LOW);
       }
       if (_dataMode == SPI_MODE1) {
         digitalWrite(_sck, HIGH);
@@ -131,7 +140,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
       }
     }
-
+    //Serial.print(" : 0x"); Serial.print(reply, HEX);
     if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
       uint8_t temp = 0;
@@ -140,6 +149,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
       reply = temp;
     }
+    //Serial.print(" -> "); Serial.println(reply, HEX);
 
     buffer[i] = reply;
   }
@@ -286,6 +296,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
   }
   DEBUG_SERIAL.println();
 #endif
+  delay(10);
 
   // do the reading
   for (size_t i = 0; i < read_len; i++) {
