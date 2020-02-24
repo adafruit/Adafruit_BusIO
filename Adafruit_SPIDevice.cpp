@@ -120,7 +120,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
       send = temp;
     }
-    //Serial.print(send, HEX);
+    // Serial.print(send, HEX);
     for (int b = 7; b >= 0; b--) {
       reply <<= 1;
       if (_dataMode == SPI_MODE0) {
@@ -140,7 +140,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
       }
     }
-    //Serial.print(" : 0x"); Serial.print(reply, HEX);
+    // Serial.print(" : 0x"); Serial.print(reply, HEX);
     if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
       uint8_t temp = 0;
@@ -149,7 +149,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
       reply = temp;
     }
-    //Serial.print(" -> "); Serial.println(reply, HEX);
+    // Serial.print(" -> "); Serial.println(reply, HEX);
 
     buffer[i] = reply;
   }
