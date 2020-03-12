@@ -8,6 +8,7 @@
 typedef enum _Adafruit_BusIO_SPIRegType {
   ADDRBIT8_HIGH_TOREAD = 0,
   AD8_HIGH_TOREAD_AD7_HIGH_TOINC = 1,
+  ADDRBIT8_HIGH_TOWRITE = 2,
 } Adafruit_BusIO_SPIRegType;
 
 /*!
