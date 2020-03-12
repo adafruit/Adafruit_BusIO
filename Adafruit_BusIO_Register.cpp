@@ -7,7 +7,7 @@
  *    @param  reg_addr The address pointer value for the I2C/SMBus register, can
  * be 8 or 16 bits
  *    @param  width    The width of the register data itself, defaults to 1 byte
- *    @param  bitorder The bit order of the register (used when width is > 1),
+ *    @param  byteorder The byte order of the register (used when width is > 1),
  * defaults to LSBFIRST
  *    @param  address_width The width of the register address itself, defaults
  * to 1 byte
@@ -15,26 +15,26 @@
 Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice,
                                                  uint16_t reg_addr,
                                                  uint8_t width,
-                                                 uint8_t bitorder,
+                                                 uint8_t byteorder,
                                                  uint8_t address_width) {
   _i2cdevice = i2cdevice;
   _spidevice = NULL;
   _addrwidth = address_width;
   _address = reg_addr;
-  _bitorder = bitorder;
+  _byteorder = byteorder;
   _width = width;
 }
 
 /*!
  *    @brief  Create a register we access over an SPI Device (which defines the
  * bus and CS pin)
- *    @param  spidevice The SPIDevice to use for underlying I2C access
- *    @param  reg_addr The address pointer value for the I2C/SMBus register, can
+ *    @param  spidevice The SPIDevice to use for underlying SPI access
+ *    @param  reg_addr The address pointer value for the SPI register, can
  * be 8 or 16 bits
  *    @param  type     The method we use to read/write data to SPI (which is not
  * as well defined as I2C)
  *    @param  width    The width of the register data itself, defaults to 1 byte
- *    @param  bitorder The bit order of the register (used when width is > 1),
+ *    @param  byteorder The byte order of the register (used when width is > 1),
  * defaults to LSBFIRST
  *    @param  address_width The width of the register address itself, defaults
  * to 1 byte
@@ -43,14 +43,14 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
                                                  uint16_t reg_addr,
                                                  Adafruit_BusIO_SPIRegType type,
                                                  uint8_t width,
-                                                 uint8_t bitorder,
+                                                 uint8_t byteorder,
                                                  uint8_t address_width) {
   _spidevice = spidevice;
   _spiregtype = type;
   _i2cdevice = NULL;
   _addrwidth = address_width;
   _address = reg_addr;
-  _bitorder = bitorder;
+  _byteorder = byteorder;
   _width = width;
 }
 
@@ -60,14 +60,14 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
  * libraries to mass-define all the registers
  *    @param  i2cdevice The I2CDevice to use for underlying I2C access, if NULL
  * we use SPI
- *    @param  spidevice The SPIDevice to use for underlying I2C access, if NULL
+ *    @param  spidevice The SPIDevice to use for underlying SPI access, if NULL
  * we use I2C
- *    @param  reg_addr The address pointer value for the I2C/SMBus register, can
- * be 8 or 16 bits
+ *    @param  reg_addr The address pointer value for the I2C/SMBus/SPI register,
+ * can be 8 or 16 bits
  *    @param  type     The method we use to read/write data to SPI (which is not
  * as well defined as I2C)
  *    @param  width    The width of the register data itself, defaults to 1 byte
- *    @param  bitorder The bit order of the register (used when width is > 1),
+ *    @param  byteorder The byte order of the register (used when width is > 1),
  * defaults to LSBFIRST
  *    @param  address_width The width of the register address itself, defaults
  * to 1 byte
@@ -75,13 +75,13 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
 Adafruit_BusIO_Register::Adafruit_BusIO_Register(
     Adafruit_I2CDevice *i2cdevice, Adafruit_SPIDevice *spidevice,
     Adafruit_BusIO_SPIRegType type, uint16_t reg_addr, uint8_t width,
-    uint8_t bitorder, uint8_t address_width) {
+    uint8_t byteorder, uint8_t address_width) {
   _spidevice = spidevice;
   _i2cdevice = i2cdevice;
   _spiregtype = type;
   _addrwidth = address_width;
   _address = reg_addr;
-  _bitorder = bitorder;
+  _byteorder = byteorder;
   _width = width;
 }
 
@@ -132,7 +132,7 @@ bool Adafruit_BusIO_Register::write(uint32_t value, uint8_t numbytes) {
   }
 
   for (int i = 0; i < numbytes; i++) {
-    if (_bitorder == LSBFIRST) {
+    if (_byteorder == LSBFIRST) {
       _buffer[i] = value & 0xFF;
     } else {
       _buffer[numbytes - i - 1] = value & 0xFF;
@@ -156,7 +156,7 @@ uint32_t Adafruit_BusIO_Register::read(void) {
 
   for (int i = 0; i < _width; i++) {
     value <<= 8;
-    if (_bitorder == LSBFIRST) {
+    if (_byteorder == LSBFIRST) {
       value |= _buffer[_width - i - 1];
     } else {
       value |= _buffer[i];
@@ -206,7 +206,7 @@ bool Adafruit_BusIO_Register::read(uint16_t *value) {
     return false;
   }
 
-  if (_bitorder == LSBFIRST) {
+  if (_byteorder == LSBFIRST) {
     *value = _buffer[1];
     *value <<= 8;
     *value |= _buffer[0];
