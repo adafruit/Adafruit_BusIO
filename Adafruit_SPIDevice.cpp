@@ -124,7 +124,9 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     for (int b = 7; b >= 0; b--) {
       reply <<= 1;
       if (_dataMode == SPI_MODE0) {
-        digitalWrite(_mosi, send & (1 << b));
+        if (_mosi != -1) {
+          digitalWrite(_mosi, send & (1 << b));
+        }
         digitalWrite(_sck, HIGH);
         if ((_miso != -1) && digitalRead(_miso)) {
           reply |= 1;
@@ -133,13 +135,18 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
       if (_dataMode == SPI_MODE1) {
         digitalWrite(_sck, HIGH);
-        digitalWrite(_mosi, send & (1 << b));
+        if (_mosi != -1) {
+          digitalWrite(_mosi, send & (1 << b));
+        }
         digitalWrite(_sck, LOW);
         if ((_miso != -1) && digitalRead(_miso)) {
           reply |= 1;
         }
       }
     }
+
+
+
     // Serial.print(" : 0x"); Serial.print(reply, HEX);
     if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
