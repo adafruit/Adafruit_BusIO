@@ -145,8 +145,6 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       }
     }
 
-
-
     // Serial.print(" : 0x"); Serial.print(reply, HEX);
     if (_dataOrder == SPI_BITORDER_LSBFIRST) {
       // LSB is rare, if it happens we'll just flip the bits around for them
