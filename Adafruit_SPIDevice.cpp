@@ -123,7 +123,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // Serial.print(send, HEX);
     for (int b = 7; b >= 0; b--) {
       reply <<= 1;
-      if (_dataMode == SPI_MODE0) {
+      if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         if (_mosi != -1) {
           digitalWrite(_mosi, send & (1 << b));
         }
@@ -133,7 +133,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
         digitalWrite(_sck, LOW);
       }
-      if (_dataMode == SPI_MODE1) {
+      if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3) {
         digitalWrite(_sck, HIGH);
         if (_mosi != -1) {
           digitalWrite(_mosi, send & (1 << b));
