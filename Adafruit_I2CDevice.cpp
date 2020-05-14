@@ -219,6 +219,7 @@ uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
 /*!
  *    @brief  Change the I2C clock speed to desired (relies on
  *    underlying Wire support!
+ *    @param desiredclk The desired I2C SCL frequency
  *    @return True if this platform supports changing I2C speed.
  *    Not necessarily that the speed was achieved!
  */
