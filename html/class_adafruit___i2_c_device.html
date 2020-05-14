@@ -94,6 +94,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7161ce0c7136103d0704fb3ce858c6f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a7161ce0c7136103d0704fb3ce858c6f7">write_then_read</a> (uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, bool stop=false)</td></tr>
 <tr class="memdesc:a7161ce0c7136103d0704fb3ce858c6f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from I2C into another buffer. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. The buffers can point to same/overlapping locations.  <a href="#a7161ce0c7136103d0704fb3ce858c6f7">More...</a><br /></td></tr>
 <tr class="separator:a7161ce0c7136103d0704fb3ce858c6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a784c398626837ef911ce7e69b0807be7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a784c398626837ef911ce7e69b0807be7">setSpeed</a> (uint32_t desiredclk)</td></tr>
+<tr class="memdesc:a784c398626837ef911ce7e69b0807be7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the I2C clock speed to desired (relies on underlying Wire support!  <a href="#a784c398626837ef911ce7e69b0807be7">More...</a><br /></td></tr>
+<tr class="separator:a784c398626837ef911ce7e69b0807be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20c6ac28cbaa9e5f63ef6d4687fd4e60"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60">maxBufferSize</a> ()</td></tr>
 <tr class="memdesc:a20c6ac28cbaa9e5f63ef6d4687fd4e60"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many bytes we can read in a transaction.  <a href="#a20c6ac28cbaa9e5f63ef6d4687fd4e60">More...</a><br /></td></tr>
 <tr class="separator:a20c6ac28cbaa9e5f63ef6d4687fd4e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -368,6 +371,33 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if write &amp; read was successful, otherwise false. </dd></dl>
+
+</div>
+</div>
+<a id="a784c398626837ef911ce7e69b0807be7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a784c398626837ef911ce7e69b0807be7">&#9670;&nbsp;</a></span>setSpeed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_I2CDevice::setSpeed </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>desiredclk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Change the I2C clock speed to desired (relies on underlying Wire support! </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">desiredclk</td><td>The desired I2C SCL frequency </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if this platform supports changing I2C speed. Not necessarily that the speed was achieved! </dd></dl>
 
 </div>
 </div>
