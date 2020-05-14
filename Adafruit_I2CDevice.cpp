@@ -114,7 +114,7 @@ bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop,
     DEBUG_SERIAL.print(F("0x"));
     DEBUG_SERIAL.print(buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
-    if (len % 32 == 31) {
+    if (i % 32 == 31) {
       DEBUG_SERIAL.println();
     }
   }
@@ -215,3 +215,18 @@ bool Adafruit_I2CDevice::write_then_read(uint8_t *write_buffer,
  *    @return The 7-bit address of this device
  */
 uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
+
+/*!
+ *    @brief  Change the I2C clock speed to desired (relies on 
+ *    underlying Wire support!
+ *    @return True if this platform supports changing I2C speed.
+ *    Not necessarily that the speed was achieved!
+ */
+bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
+#if (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER)
+  _wire->setClock(desiredclk);
+  return true;
+#else
+  return false;
+#endif
+}
