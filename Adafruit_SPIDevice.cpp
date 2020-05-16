@@ -215,7 +215,7 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
     DEBUG_SERIAL.print(F("0x"));
     DEBUG_SERIAL.print(buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
-    if (len % 32 == 31) {
+    if (i % 32 == 31) {
       DEBUG_SERIAL.println();
     }
   }
