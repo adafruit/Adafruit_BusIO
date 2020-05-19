@@ -64,7 +64,16 @@ bool Adafruit_SPIDevice::begin(void) {
   digitalWrite(_cs, HIGH);
 
   if (_spi) { // hardware SPI
+    // store the current pin state
+    uint8_t SS_state = digitalRead(SS);
+    // store the current pin mode
+    uint8_t SS_mode = ~(DDRB & bit(SS));  
     _spi->begin();
+    DDRB |= SS_mode;
+    // restore the mode and write if mode is OUTPUT
+    if ( SS_mode != 0){
+      digitalWrite(SS, SS_state);
+    }
   } else {
     pinMode(_sck, OUTPUT);
 
