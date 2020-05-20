@@ -301,7 +301,6 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
   }
   DEBUG_SERIAL.println();
 #endif
-  delay(10);
 
   // do the reading
   for (size_t i = 0; i < read_len; i++) {
