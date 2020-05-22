@@ -1,7 +1,7 @@
 #include <Adafruit_I2CDevice.h>
 #include <Arduino.h>
 
-#define DEBUG_SERIAL Serial
+//#define DEBUG_SERIAL Serial
 
 /*!
  *    @brief  Create an I2C device at a given address
