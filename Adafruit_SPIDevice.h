@@ -5,7 +5,8 @@
 
 // some modern SPI definitions don't have BitOrder enum
 #if (defined(__AVR__) && !defined(ARDUINO_ARCH_MEGAAVR)) ||                    \
-    defined(ESP8266) || defined(TEENSYDUINO)
+    defined(ESP8266) || defined(TEENSYDUINO) ||                                \
+    defined(ARDUINO_ARCH_SPRESENSE)
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = MSBFIRST,
   SPI_BITORDER_LSBFIRST = LSBFIRST,
