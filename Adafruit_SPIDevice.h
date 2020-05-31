@@ -29,7 +29,7 @@ typedef enum _BitOrder {
 #define SPI_BITORDER_LSBFIRST LSBFIRST
 #endif
 
-///< The class which defines how we will talk to this device over SPI
+/**! The class which defines how we will talk to this device over SPI **/
 class Adafruit_SPIDevice {
 public:
   Adafruit_SPIDevice(int8_t cspin, uint32_t freq = 1000000,
