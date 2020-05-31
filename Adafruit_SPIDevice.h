@@ -13,22 +13,18 @@ typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = MSBFIRST,
   SPI_BITORDER_LSBFIRST = LSBFIRST,
 } BitOrder;
-#endif
+
+#elif defined(ESP32)
 
 // some modern SPI definitions don't have BitOrder enum and have different SPI
 // mode defines
-#if defined(ESP32)
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = SPI_MSBFIRST,
   SPI_BITORDER_LSBFIRST = SPI_LSBFIRST,
 } BitOrder;
-#endif
 
+#else
 // Some platforms have a BitOrder enum but its named MSBFIRST/LSBFIRST
-#if defined(ARDUINO_ARCH_SAMD) || defined(__SAM3X8E__) ||                      \
-    defined(NRF52_SERIES) || defined(ARDUINO_ARCH_ARDUINO_CORE_STM32) ||       \
-    defined(ARDUINO_ARCH_MEGAAVR) || defined(_STM32_DEF_) ||                   \
-    defined(XMC_BOARD)
 #define SPI_BITORDER_MSBFIRST MSBFIRST
 #define SPI_BITORDER_LSBFIRST LSBFIRST
 #endif
