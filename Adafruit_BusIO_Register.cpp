@@ -131,6 +131,9 @@ bool Adafruit_BusIO_Register::write(uint32_t value, uint8_t numbytes) {
     return false;
   }
 
+  // store a copy
+  _cached = value;
+
   for (int i = 0; i < numbytes; i++) {
     if (_byteorder == LSBFIRST) {
       _buffer[i] = value & 0xFF;
@@ -167,6 +170,15 @@ uint32_t Adafruit_BusIO_Register::read(void) {
 }
 
 /*!
+ *    @brief  Read cached data from last time we wrote to this register
+ *    @return Returns 0xFFFFFFFF on failure, value otherwise
+ */
+uint32_t Adafruit_BusIO_Register::readCached(void) {
+  return _cached;
+}
+
+
+/*!
  *    @brief  Read a buffer of data from the register location
  *    @param  buffer Pointer to data to read into
  *    @param  len Number of bytes to read
@@ -194,6 +206,7 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
   }
   return false;
 }
+
 
 /*!
  *    @brief  Read 2 bytes of data from the register location
