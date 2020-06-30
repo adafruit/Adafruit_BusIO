@@ -94,6 +94,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a699434b2567ae8fce541b8048d891252"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a699434b2567ae8fce541b8048d891252">read</a> (void)</td></tr>
 <tr class="memdesc:a699434b2567ae8fce541b8048d891252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the register location. This does not do any error checking!  <a href="#a699434b2567ae8fce541b8048d891252">More...</a><br /></td></tr>
 <tr class="separator:a699434b2567ae8fce541b8048d891252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9738fbb8c088d5cf6d381f87dc9288bb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a9738fbb8c088d5cf6d381f87dc9288bb">readCached</a> (void)</td></tr>
+<tr class="memdesc:a9738fbb8c088d5cf6d381f87dc9288bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read cached data from last time we wrote to this register.  <a href="#a9738fbb8c088d5cf6d381f87dc9288bb">More...</a><br /></td></tr>
+<tr class="separator:a9738fbb8c088d5cf6d381f87dc9288bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa418dced5301a1d8c1776a1941c8bc64"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#aa418dced5301a1d8c1776a1941c8bc64">write</a> (uint8_t *buffer, uint8_t len)</td></tr>
 <tr class="memdesc:aa418dced5301a1d8c1776a1941c8bc64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer of data to the register location.  <a href="#aa418dced5301a1d8c1776a1941c8bc64">More...</a><br /></td></tr>
 <tr class="separator:aa418dced5301a1d8c1776a1941c8bc64"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -418,6 +421,27 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read data from the register location. This does not do any error checking! </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns 0xFFFFFFFF on failure, value otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a9738fbb8c088d5cf6d381f87dc9288bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9738fbb8c088d5cf6d381f87dc9288bb">&#9670;&nbsp;</a></span>readCached()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t Adafruit_BusIO_Register::readCached </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read cached data from last time we wrote to this register. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns 0xFFFFFFFF on failure, value otherwise </dd></dl>
 
 </div>
