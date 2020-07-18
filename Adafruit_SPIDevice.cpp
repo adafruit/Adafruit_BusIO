@@ -116,6 +116,17 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     return;
   }
 
+  int8_t startbit, endbit, inc;
+  if (_dataOrder == SPI_BITORDER_LSBFIRST) {
+    startbit = 0;
+    endbit = 8;
+    inc = 1;
+  } else {
+    startbit = 7;
+    endbit = -1;
+    inc = -1;
+  }
+
   // for softSPI we'll do it by hand
   for (size_t i = 0; i < len; i++) {
     // software SPI
@@ -128,26 +139,17 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     Serial.print(" -> 0x");
     */
 
-    if (_dataOrder == SPI_BITORDER_LSBFIRST) {
-      // LSB is rare, if it happens we'll just flip the bits around for them
-      uint8_t temp = 0;
-      for (uint8_t b = 0; b < 8; b++) {
-        temp |= ((send >> b) & 0x1) << (7 - b);
-      }
-      send = temp;
-    }
     // Serial.print(send, HEX);
-    for (int b = 7; b >= 0; b--) {
-      reply <<= 1;
+    for (int b = startbit; b != endbit; b += inc) {
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
-          digitalWrite(_mosi, send & (1 << b));
-#else
           if (send & (1 << b))
             *mosiPort |= mosiPinMask;
           else
             *mosiPort &= ~mosiPinMask;
+#else
+          digitalWrite(_mosi, send & (1 << b));
 #endif
         }
 
@@ -163,7 +165,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
           if (digitalRead(_miso)) {
 #endif
-            reply |= 1;
+            reply |= (1 << b);
           }
         }
 
@@ -183,12 +185,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
-          digitalWrite(_mosi, send & (1 << b));
-#else
           if (send & (1 << b))
             *mosiPort |= mosiPinMask;
           else
             *mosiPort &= ~mosiPinMask;
+#else
+          digitalWrite(_mosi, send & (1 << b));
 #endif
         }
 
@@ -204,25 +206,13 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
           if (digitalRead(_miso)) {
 #endif
-            reply |= 1;
+            reply |= (1 << b);
           }
         }
       }
-    }
-
-    // Serial.print(" : 0x"); Serial.print(reply, HEX);
-    if (_miso != -1) {
-      if (_dataOrder == SPI_BITORDER_LSBFIRST) {
-        // LSB is rare, if it happens we'll just flip the bits around for them
-        uint8_t temp = 0;
-        for (uint8_t b = 0; b < 8; b++) {
-          temp |= ((reply >> b) & 0x1) << (7 - b);
-        }
-        reply = temp;
+      if (_miso != -1) {
+        buffer[i] = reply;
       }
-      // Serial.print(" -> "); Serial.println(reply, HEX);
-
-      buffer[i] = reply;
     }
   }
   return;
