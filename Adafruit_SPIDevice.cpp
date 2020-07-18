@@ -116,15 +116,11 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     return;
   }
 
-  int8_t startbit, endbit, inc;
+  uint8_t startbit;
   if (_dataOrder == SPI_BITORDER_LSBFIRST) {
-    startbit = 0;
-    endbit = 8;
-    inc = 1;
+    startbit = 0x1;
   } else {
-    startbit = 7;
-    endbit = -1;
-    inc = -1;
+    startbit = 0x80;
   }
 
   // for softSPI we'll do it by hand
@@ -140,16 +136,16 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     */
 
     // Serial.print(send, HEX);
-    for (int b = startbit; b != endbit; b += inc) {
+    for (uint8_t b = startbit; b != 0; b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
-          if (send & (1 << b))
+          if (send & b)
             *mosiPort |= mosiPinMask;
           else
             *mosiPort &= ~mosiPinMask;
 #else
-          digitalWrite(_mosi, send & (1 << b));
+          digitalWrite(_mosi, send & b);
 #endif
         }
 
@@ -165,7 +161,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
           if (digitalRead(_miso)) {
 #endif
-            reply |= (1 << b);
+            reply |= b;
           }
         }
 
@@ -184,12 +180,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
-          if (send & (1 << b))
+          if (send & b)
             *mosiPort |= mosiPinMask;
           else
             *mosiPort &= ~mosiPinMask;
 #else
-          digitalWrite(_mosi, send & (1 << b));
+          digitalWrite(_mosi, send & b);
 #endif
         }
 
@@ -205,7 +201,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
           if (digitalRead(_miso)) {
 #endif
-            reply |= (1 << b);
+            reply |= b;
           }
         }
       }
