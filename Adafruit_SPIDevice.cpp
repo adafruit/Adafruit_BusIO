@@ -124,6 +124,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
   }
 
   bool towrite, lastmosi = !(buffer[0] & startbit);
+  uint8_t bitdelay_us = (1000000 / _freq) / 2;
 
   // for softSPI we'll do it by hand
   for (size_t i = 0; i < len; i++) {
@@ -140,6 +141,11 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // Serial.print(send, HEX);
     for (uint8_t b = startbit; b != 0;
          b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
+
+      if (bitdelay_us) {
+        delayMicroseconds(bitdelay_us);
+      }
+
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         towrite = send & b;
         if ((_mosi != -1) && (lastmosi != towrite)) {
@@ -159,6 +165,10 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
         digitalWrite(_sck, HIGH);
 #endif
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
 
         if (_miso != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
@@ -182,6 +192,10 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
         digitalWrite(_sck, HIGH);
 #endif
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
 
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
