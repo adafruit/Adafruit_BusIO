@@ -123,7 +123,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     startbit = 0x80;
   }
 
-  bool towrite, lastmosi = ! (buffer[0] & startbit);
+  bool towrite, lastmosi = !(buffer[0] & startbit);
 
   // for softSPI we'll do it by hand
   for (size_t i = 0; i < len; i++) {
@@ -138,7 +138,8 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     */
 
     // Serial.print(send, HEX);
-    for (uint8_t b = startbit; b != 0; b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
+    for (uint8_t b = startbit; b != 0;
+         b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         towrite = send & b;
         if ((_mosi != -1) && (lastmosi != towrite)) {
