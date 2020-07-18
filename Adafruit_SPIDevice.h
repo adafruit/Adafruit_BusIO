@@ -51,6 +51,8 @@ public:
 
   uint8_t transfer(uint8_t send);
   void transfer(uint8_t *buffer, size_t len);
+  void beginTransaction(void);
+  void endTransaction(void);
 
 private:
   SPIClass *_spi;

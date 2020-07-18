@@ -173,6 +173,25 @@ uint8_t Adafruit_SPIDevice::transfer(uint8_t send) {
 }
 
 /*!
+ *    @brief  Manually begin a transaction (calls beginTransaction if hardware
+ * SPI)
+ */
+void Adafruit_SPIDevice::beginTransaction(void) {
+  if (_spi) {
+    _spi->beginTransaction(*_spiSetting);
+  }
+}
+
+/*!
+ *    @brief  Manually end a transaction (calls endTransaction if hardware SPI)
+ */
+void Adafruit_SPIDevice::endTransaction(void) {
+  if (_spi) {
+    _spi->endTransaction();
+  }
+}
+
+/*!
  *    @brief  Write a buffer or two to the SPI device.
  *    @param  buffer Pointer to buffer of data to write
  *    @param  len Number of bytes from buffer to write
