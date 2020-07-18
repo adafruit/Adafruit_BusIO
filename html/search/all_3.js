@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maxbuffersize',['maxBufferSize',['../class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60',1,'Adafruit_I2CDevice']]]
+  ['endtransaction',['endTransaction',['../class_adafruit___s_p_i_device.html#a65b517b7372df56322b807a08d067f8b',1,'Adafruit_SPIDevice']]]
 ];
