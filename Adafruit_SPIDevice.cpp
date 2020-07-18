@@ -174,8 +174,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
         digitalWrite(_sck, LOW);
 #endif
-      }
-      if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3) {
+      } else { // if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3)
 
 #ifdef BUSIO_USE_FAST_PINIO
         *clkPort |= clkPinMask; // Clock high
