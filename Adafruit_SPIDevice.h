@@ -5,7 +5,7 @@
 
 // some modern SPI definitions don't have BitOrder enum
 #if (defined(__AVR__) && !defined(ARDUINO_ARCH_MEGAAVR)) ||                    \
-    defined(ESP8266) || defined(TEENSYDUINO) ||                                \
+    defined(ESP8266) || defined(TEENSYDUINO) || defined(SPARK) ||              \
     defined(ARDUINO_ARCH_SPRESENSE) || defined(ARDUINO_attinyxy7) ||           \
     defined(ARDUINO_attinyxy6) || defined(ARDUINO_attinyxy4) ||                \
     defined(ARDUINO_attinyxy2) || defined(ARDUINO_AVR_ATmega4809) ||           \

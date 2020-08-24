@@ -112,7 +112,16 @@ bool Adafruit_SPIDevice::begin(void) {
 void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
   if (_spi) {
     // hardware SPI is easy
-    _spi->transfer(buffer, len);
+    #ifdef SPARK
+      // Spark uses asynchronous DMA for multi-byte transfers; 
+      // just use the single-byte method for sync transfers.
+      for (size_t i = 0; i < len; i++) {
+        _spi->transfer(buffer[i]);
+      }
+    #else
+      _spi->transfer(buffer, len);
+    #endif
+
     return;
   }
 
