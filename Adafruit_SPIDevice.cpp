@@ -114,11 +114,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // hardware SPI is easy
 
 #ifdef SPARK
-    // Spark uses asynchronous DMA for multi-byte transfers; 
-    // just use the single-byte method for sync transfers.
-    for (size_t i = 0; i < len; i++) {
-      _spi->transfer(buffer[i]);
-    }
+    _spi->transfer(buffer, buffer, len, NULL);
 #else
     _spi->transfer(buffer, len);
 #endif
