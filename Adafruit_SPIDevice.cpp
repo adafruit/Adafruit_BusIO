@@ -112,7 +112,13 @@ bool Adafruit_SPIDevice::begin(void) {
 void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
   if (_spi) {
     // hardware SPI is easy
+
+#ifdef SPARK
+    _spi->transfer(buffer, buffer, len, NULL);
+#else
     _spi->transfer(buffer, len);
+#endif
+
     return;
   }
 
