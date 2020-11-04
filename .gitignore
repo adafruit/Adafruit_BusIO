@@ -1,0 +1,28 @@
+
+# IDE - VSCode
+.vscode
+
+# misc
+*.zip
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# C++ Files
+*.o
+*.out
+*.log
+
+# Arduino Files
+arduino-cli.yaml
+*.hex
+*.elf
+*.eep
+libraries
+
+# Arduino-CI Files
+Gemfile.lock
+.bundle/*
+vendor/*
+*.cpp.bin*
