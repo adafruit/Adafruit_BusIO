@@ -2,8 +2,8 @@
 #include <ArduinoUnitTests.h>
 
 unittest(loop) {
-// token test
-assertTrue(true);
+  // token test
+  assertTrue(true);
 }
 
 unittest_main()
