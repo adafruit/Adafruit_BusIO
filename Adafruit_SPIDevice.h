@@ -26,6 +26,14 @@ typedef enum _BitOrder {
   SPI_BITORDER_LSBFIRST = SPI_LSBFIRST,
 } BitOrder;
 
+#elif defined(__ASR6501__)
+#include <Arduino.h>
+typedef enum _BitOrder
+{
+  SPI_BITORDER_MSBFIRST = MSBFIRST,
+  SPI_BITORDER_LSBFIRST = LSBFIRST,
+} BitOrder;
+
 #else
 // Some platforms have a BitOrder enum but its named MSBFIRST/LSBFIRST
 #define SPI_BITORDER_MSBFIRST MSBFIRST
@@ -47,7 +55,9 @@ typedef uint32_t BusIO_PortMask;
     !defined(ARDUINO_ARCH_MBED)
 typedef volatile uint32_t BusIO_PortReg;
 typedef uint32_t BusIO_PortMask;
+#if not defined(__ASR6501__)
 #define BUSIO_USE_FAST_PINIO
+#endif
 
 #else
 #undef BUSIO_USE_FAST_PINIO
