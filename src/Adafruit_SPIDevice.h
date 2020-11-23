@@ -32,7 +32,7 @@ typedef enum _BitOrder {
 #define SPI_BITORDER_LSBFIRST LSBFIRST
 #endif
 
-#if defined(__AVR__) || defined(TEENSYDUINO)
+#if (defined(__AVR__) || defined(TEENSYDUINO)) && !defined(MOCK_PINS_COUNT)
 typedef volatile uint8_t BusIO_PortReg;
 typedef uint8_t BusIO_PortMask;
 #define BUSIO_USE_FAST_PINIO
