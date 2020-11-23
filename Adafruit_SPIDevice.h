@@ -17,21 +17,13 @@ typedef enum _BitOrder {
   SPI_BITORDER_LSBFIRST = LSBFIRST,
 } BitOrder;
 
-#elif defined(ESP32)
+#elif defined(ESP32) || defined(__ASR6501__)
 
 // some modern SPI definitions don't have BitOrder enum and have different SPI
 // mode defines
 typedef enum _BitOrder {
   SPI_BITORDER_MSBFIRST = SPI_MSBFIRST,
   SPI_BITORDER_LSBFIRST = SPI_LSBFIRST,
-} BitOrder;
-
-#elif defined(__ASR6501__)
-#include <Arduino.h>
-typedef enum _BitOrder
-{
-  SPI_BITORDER_MSBFIRST = MSBFIRST,
-  SPI_BITORDER_LSBFIRST = LSBFIRST,
 } BitOrder;
 
 #else
