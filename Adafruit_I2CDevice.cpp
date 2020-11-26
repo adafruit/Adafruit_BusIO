@@ -66,8 +66,8 @@ bool Adafruit_I2CDevice::detected(void) {
  *    @param  stop Whether to send an I2C STOP signal on write
  *    @return True if write was successful, otherwise false.
  */
-bool Adafruit_I2CDevice::write(uint8_t *buffer, size_t len, bool stop,
-                               uint8_t *prefix_buffer, size_t prefix_len) {
+bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
+                               const uint8_t *prefix_buffer, size_t prefix_len) {
   if ((len + prefix_len) > maxBufferSize()) {
     // currently not guaranteed to work if more than 32 bytes!
     // we will need to find out if some platforms have larger
@@ -200,7 +200,7 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
  *    @param  stop Whether to send an I2C STOP signal between the write and read
  *    @return True if write & read was successful, otherwise false.
  */
-bool Adafruit_I2CDevice::write_then_read(uint8_t *write_buffer,
+bool Adafruit_I2CDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, bool stop) {
   if (!write(write_buffer, write_len, stop)) {
