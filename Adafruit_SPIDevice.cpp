@@ -115,10 +115,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 
 #ifdef SPARK
     _spi->transfer(buffer, buffer, len, NULL);
-#else
+#elsif STM32
     for (size_t i = 0; i < len; i++) {
       _spi->transfer(buffer[i]);
     }
+#else
+        _spi->transfer(buffer, len);
 #endif
 
     return;
