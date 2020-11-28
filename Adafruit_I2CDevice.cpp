@@ -67,7 +67,8 @@ bool Adafruit_I2CDevice::detected(void) {
  *    @return True if write was successful, otherwise false.
  */
 bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
-                               const uint8_t *prefix_buffer, size_t prefix_len) {
+                               const uint8_t *prefix_buffer,
+                               size_t prefix_len) {
   if ((len + prefix_len) > maxBufferSize()) {
     // currently not guaranteed to work if more than 32 bytes!
     // we will need to find out if some platforms have larger
