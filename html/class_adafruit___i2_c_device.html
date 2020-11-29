@@ -88,12 +88,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afeeccb3147b2f0340c65d2c0c1ce3ea6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#afeeccb3147b2f0340c65d2c0c1ce3ea6">read</a> (uint8_t *buffer, size_t len, bool stop=true)</td></tr>
 <tr class="memdesc:afeeccb3147b2f0340c65d2c0c1ce3ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from I2C into a buffer from the I2C device. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes.  <a href="#afeeccb3147b2f0340c65d2c0c1ce3ea6">More...</a><br /></td></tr>
 <tr class="separator:afeeccb3147b2f0340c65d2c0c1ce3ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a382834acac211d47b471de3180327c06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a382834acac211d47b471de3180327c06">write</a> (uint8_t *buffer, size_t len, bool stop=true, uint8_t *prefix_buffer=NULL, size_t prefix_len=0)</td></tr>
-<tr class="memdesc:a382834acac211d47b471de3180327c06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the I2C device. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes.  <a href="#a382834acac211d47b471de3180327c06">More...</a><br /></td></tr>
-<tr class="separator:a382834acac211d47b471de3180327c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7161ce0c7136103d0704fb3ce858c6f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a7161ce0c7136103d0704fb3ce858c6f7">write_then_read</a> (uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, bool stop=false)</td></tr>
-<tr class="memdesc:a7161ce0c7136103d0704fb3ce858c6f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from I2C into another buffer. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. The buffers can point to same/overlapping locations.  <a href="#a7161ce0c7136103d0704fb3ce858c6f7">More...</a><br /></td></tr>
-<tr class="separator:a7161ce0c7136103d0704fb3ce858c6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf8eb0d537eec82ead72670ab9803622"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#abf8eb0d537eec82ead72670ab9803622">write</a> (const uint8_t *buffer, size_t len, bool stop=true, const uint8_t *prefix_buffer=NULL, size_t prefix_len=0)</td></tr>
+<tr class="memdesc:abf8eb0d537eec82ead72670ab9803622"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the I2C device. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes.  <a href="#abf8eb0d537eec82ead72670ab9803622">More...</a><br /></td></tr>
+<tr class="separator:abf8eb0d537eec82ead72670ab9803622"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af04af7e2918c873215ce949ce05ebe33"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#af04af7e2918c873215ce949ce05ebe33">write_then_read</a> (const uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, bool stop=false)</td></tr>
+<tr class="memdesc:af04af7e2918c873215ce949ce05ebe33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from I2C into another buffer. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. The buffers can point to same/overlapping locations.  <a href="#af04af7e2918c873215ce949ce05ebe33">More...</a><br /></td></tr>
+<tr class="separator:af04af7e2918c873215ce949ce05ebe33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a784c398626837ef911ce7e69b0807be7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___i2_c_device.html#a784c398626837ef911ce7e69b0807be7">setSpeed</a> (uint32_t desiredclk)</td></tr>
 <tr class="memdesc:a784c398626837ef911ce7e69b0807be7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the I2C clock speed to desired (relies on underlying Wire support!  <a href="#a784c398626837ef911ce7e69b0807be7">More...</a><br /></td></tr>
 <tr class="separator:a784c398626837ef911ce7e69b0807be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -256,8 +256,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a382834acac211d47b471de3180327c06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a382834acac211d47b471de3180327c06">&#9670;&nbsp;</a></span>write()</h2>
+<a id="abf8eb0d537eec82ead72670ab9803622"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf8eb0d537eec82ead72670ab9803622">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +265,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool Adafruit_I2CDevice::write </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -283,7 +283,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>prefix_buffer</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -303,9 +303,9 @@ Public Member Functions</h2></td></tr>
 <p>Write a buffer or two to the I2C device. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffer</td><td>Pointer to buffer of data to write </td></tr>
+    <tr><td class="paramname">buffer</td><td>Pointer to buffer of data to write. This is const to ensure the content of this buffer doesn't change. </td></tr>
     <tr><td class="paramname">len</td><td>Number of bytes from buffer to write </td></tr>
-    <tr><td class="paramname">prefix_buffer</td><td>Pointer to optional array of data to write before buffer. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. </td></tr>
+    <tr><td class="paramname">prefix_buffer</td><td>Pointer to optional array of data to write before buffer. Cannot be more than <a class="el" href="class_adafruit___i2_c_device.html#a20c6ac28cbaa9e5f63ef6d4687fd4e60" title="How many bytes we can read in a transaction. ">maxBufferSize()</a> bytes. This is const to ensure the content of this buffer doesn't change. </td></tr>
     <tr><td class="paramname">prefix_len</td><td>Number of bytes from prefix buffer to write </td></tr>
     <tr><td class="paramname">stop</td><td>Whether to send an I2C STOP signal on write </td></tr>
   </table>
@@ -315,8 +315,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7161ce0c7136103d0704fb3ce858c6f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7161ce0c7136103d0704fb3ce858c6f7">&#9670;&nbsp;</a></span>write_then_read()</h2>
+<a id="af04af7e2918c873215ce949ce05ebe33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af04af7e2918c873215ce949ce05ebe33">&#9670;&nbsp;</a></span>write_then_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,7 +324,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool Adafruit_I2CDevice::write_then_read </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>write_buffer</em>, </td>
         </tr>
         <tr>
