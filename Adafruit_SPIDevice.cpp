@@ -122,7 +122,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 #else
     _spi->transfer(buffer, len);
 #endif
-  return;
+    return;
   }
 
   uint8_t startbit;
