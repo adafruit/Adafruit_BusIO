@@ -58,10 +58,12 @@ bool Adafruit_I2CDevice::detected(void) {
 /*!
  *    @brief  Write a buffer or two to the I2C device. Cannot be more than
  * maxBufferSize() bytes.
- *    @param  buffer Pointer to buffer of data to write
+ *    @param  buffer Pointer to buffer of data to write. This is const to
+ *            ensure the content of this buffer doesn't change.
  *    @param  len Number of bytes from buffer to write
  *    @param  prefix_buffer Pointer to optional array of data to write before
- * buffer. Cannot be more than maxBufferSize() bytes.
+ * buffer. Cannot be more than maxBufferSize() bytes. This is const to
+ *            ensure the content of this buffer doesn't change.
  *    @param  prefix_len Number of bytes from prefix buffer to write
  *    @param  stop Whether to send an I2C STOP signal on write
  *    @return True if write was successful, otherwise false.
