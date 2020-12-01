@@ -64,17 +64,7 @@ public:
                      uint32_t freq = 1000000,
                      BitOrder dataOrder = SPI_BITORDER_MSBFIRST,
                      uint8_t dataMode = SPI_MODE0);
-
-  ~Adafruit_SPIDevice() {
-    if (_spi) {
-      delete _spi;
-      _spi = nullptr;
-    }
-    if (_spiSetting) {
-      delete _spiSetting;
-      _spiSetting = nullptr;
-    }
-  }
+  ~Adafruit_SPIDevice();
 
   bool begin(void);
   bool read(uint8_t *buffer, size_t len, uint8_t sendvalue = 0xFF);
