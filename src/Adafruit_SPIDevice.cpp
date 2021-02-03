@@ -75,7 +75,9 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   _spi = NULL;
 }
 
-// Release memory allocated in constructors
+/*!
+ *    @brief  Release memory allocated in constructors
+ */
 Adafruit_SPIDevice::~Adafruit_SPIDevice() {
   if (_spiSetting) {
     delete _spiSetting;
@@ -126,12 +128,15 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
   if (_spi) {
     // hardware SPI is easy
 
-#ifdef SPARK
+#if defined(SPARK)
     _spi->transfer(buffer, buffer, len, NULL);
+#elif defined(STM32)
+    for (size_t i = 0; i < len; i++) {
+      _spi->transfer(buffer[i]);
+    }
 #else
     _spi->transfer(buffer, len);
 #endif
-
     return;
   }
 
