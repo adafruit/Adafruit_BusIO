@@ -33,6 +33,7 @@ public:
   Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice, uint16_t reg_addr,
                           uint8_t width = 1, uint8_t byteorder = LSBFIRST,
                           uint8_t address_width = 1);
+
   Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice, uint16_t reg_addr,
                           Adafruit_BusIO_SPIRegType type, uint8_t width = 1,
                           uint8_t byteorder = LSBFIRST,
@@ -53,6 +54,10 @@ public:
   bool write(uint32_t value, uint8_t numbytes = 0);
 
   uint8_t width(void);
+
+  void setWidth(uint8_t width);
+  void setAddress(uint16_t address);
+  void setAddressWidth(uint16_t adress_width);
 
   void print(Stream *s = &Serial);
   void println(Stream *s = &Serial);
