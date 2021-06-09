@@ -312,12 +312,14 @@ bool Adafruit_BusIO_RegisterBits::write(uint32_t data) {
 uint8_t Adafruit_BusIO_Register::width(void) { return _width; }
 
 /*!
- *    @brief  Set the width of the register data
+ *    @brief  Set the default width of data
+ *    @param width the default width of data read from register
  */
 void Adafruit_BusIO_Register::setWidth(uint8_t width) { _width = width; }
 
 /*!
  *    @brief  Set register address
+ *    @param address the address from register
  */
 void Adafruit_BusIO_Register::setAddress(uint16_t address) {
   _address = address;
@@ -325,6 +327,7 @@ void Adafruit_BusIO_Register::setAddress(uint16_t address) {
 
 /*!
  *    @brief  Set the width of register address
+ *    @param address_width the width for register address
  */
 void Adafruit_BusIO_Register::setAddressWidth(uint16_t adress_width) {
   _addrwidth = adress_width;
