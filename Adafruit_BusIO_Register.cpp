@@ -329,6 +329,6 @@ void Adafruit_BusIO_Register::setAddress(uint16_t address) {
  *    @brief  Set the width of register address
  *    @param address_width the width for register address
  */
-void Adafruit_BusIO_Register::setAddressWidth(uint16_t adress_width) {
-  _addrwidth = adress_width;
+void Adafruit_BusIO_Register::setAddressWidth(uint16_t address_width) {
+  _addrwidth = address_width;
 }

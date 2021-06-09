@@ -57,7 +57,7 @@ public:
 
   void setWidth(uint8_t width);
   void setAddress(uint16_t address);
-  void setAddressWidth(uint16_t adress_width);
+  void setAddressWidth(uint16_t address_width);
 
   void print(Stream *s = &Serial);
   void println(Stream *s = &Serial);
