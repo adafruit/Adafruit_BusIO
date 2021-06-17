@@ -111,6 +111,11 @@ bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
       addrbuffer[0] &= ~0x80;
       addrbuffer[0] |= 0x40;
     }
+    if (_spiregtype & 0x40) {
+      addrbuffer[1] = addrbuffer[0];        // move register address to 2nd place
+      addrbuffer[0] = _spiregtype & ~0x01;  // opcode goes first, clear bit0 for write
+      _addrwidth = 2;
+    }
     return _spidevice->write(buffer, len, addrbuffer, _addrwidth);
   }
   return false;
@@ -198,6 +203,11 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
     }
     if (_spiregtype == AD8_HIGH_TOREAD_AD7_HIGH_TOINC) {
       addrbuffer[0] |= 0x80 | 0x40;
+    }
+    if (_spiregtype & 0x40) {
+      addrbuffer[1] = addrbuffer[0];       // move register address to 2nd place
+      addrbuffer[0] = _spiregtype | 0x01;  // opcode goes first, set bit0 for read
+      _addrwidth = 2;
     }
     return _spidevice->write_then_read(addrbuffer, _addrwidth, buffer, len);
   }
