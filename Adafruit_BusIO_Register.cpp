@@ -101,6 +101,17 @@ bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
     return _i2cdevice->write(buffer, len, true, addrbuffer, _addrwidth);
   }
   if (_spidevice) {
+    if (_spiregtype == ADDRESSED_OPCODE_BIT0_LOW_TO_WRITE) {
+      // very special case!
+
+      // pass the special opcode address which we set as the high byte of the regaddr
+      addrbuffer[0] = (uint8_t)(_address >> 8) & ~0x01; // set bottom bit low to write
+      // the 'actual' reg addr is the second byte then
+      addrbuffer[1] = (uint8_t)(_address & 0xFF);
+      // the address appears to be a byte longer
+      return _spidevice->write(buffer, len, addrbuffer, _addrwidth+1);
+    }
+
     if (_spiregtype == ADDRBIT8_HIGH_TOREAD) {
       addrbuffer[0] &= ~0x80;
     }
@@ -190,6 +201,16 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
     return _i2cdevice->write_then_read(addrbuffer, _addrwidth, buffer, len);
   }
   if (_spidevice) {
+    if (_spiregtype == ADDRESSED_OPCODE_BIT0_LOW_TO_WRITE) {
+      // very special case!
+
+      // pass the special opcode address which we set as the high byte of the regaddr
+      addrbuffer[0] = (uint8_t)(_address >> 8) | 0x01; // set bottom bit high to read
+      // the 'actual' reg addr is the second byte then
+      addrbuffer[1] = (uint8_t)(_address & 0xFF);
+      // the address appears to be a byte longer
+      return _spidevice->write(buffer, len, addrbuffer, _addrwidth+1);
+    }
     if (_spiregtype == ADDRBIT8_HIGH_TOREAD) {
       addrbuffer[0] |= 0x80;
     }
