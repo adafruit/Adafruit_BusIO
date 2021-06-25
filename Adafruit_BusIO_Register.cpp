@@ -209,7 +209,7 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
       // the 'actual' reg addr is the second byte then
       addrbuffer[1] = (uint8_t)(_address & 0xFF);
       // the address appears to be a byte longer
-      return _spidevice->write(buffer, len, addrbuffer, _addrwidth+1);
+      return _spidevice->write_then_read(addrbuffer, _addrwidth+1, buffer, len);
     }
     if (_spiregtype == ADDRBIT8_HIGH_TOREAD) {
       addrbuffer[0] |= 0x80;
