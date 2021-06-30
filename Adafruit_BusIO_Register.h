@@ -2,6 +2,8 @@
 #include <Adafruit_SPIDevice.h>
 #include <Arduino.h>
 
+#if !defined(SPI_INTERFACES_COUNT) || (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
+
 #ifndef Adafruit_BusIO_Register_h
 #define Adafruit_BusIO_Register_h
 
@@ -98,3 +100,5 @@ private:
 };
 
 #endif // BusIO_Register_h
+
+#endif // SPI exists
