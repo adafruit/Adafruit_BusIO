@@ -1,7 +1,8 @@
-#include <Arduino.h>
 #include <Adafruit_SPIDevice.h>
+#include <Arduino.h>
 
-#if !defined(SPI_INTERFACES_COUNT) || (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
+#if !defined(SPI_INTERFACES_COUNT) ||                                          \
+    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
 //#define DEBUG_SERIAL Serial
 

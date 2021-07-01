@@ -56,7 +56,7 @@ bool Adafruit_I2CDevice::detected(void) {
     return true;
   }
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println(F("Not detected"));
+  DEBUG_SERIAL.println(F("Not detected"));
 #endif
   return false;
 }

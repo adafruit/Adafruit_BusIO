@@ -1,4 +1,5 @@
-#if !defined(SPI_INTERFACES_COUNT) || (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
+#if !defined(SPI_INTERFACES_COUNT) ||                                          \
+    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
 #include <SPI.h>
 
