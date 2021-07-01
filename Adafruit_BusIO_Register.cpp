@@ -1,5 +1,8 @@
 #include <Adafruit_BusIO_Register.h>
 
+#if !defined(SPI_INTERFACES_COUNT) ||                                          \
+    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
+
 /*!
  *    @brief  Create a register we access over an I2C Device (which defines the
  * bus and address)
@@ -358,3 +361,5 @@ void Adafruit_BusIO_Register::setAddress(uint16_t address) {
 void Adafruit_BusIO_Register::setAddressWidth(uint16_t address_width) {
   _addrwidth = address_width;
 }
+
+#endif // SPI exists

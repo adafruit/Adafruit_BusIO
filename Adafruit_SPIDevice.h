@@ -1,3 +1,6 @@
+#if !defined(SPI_INTERFACES_COUNT) ||                                          \
+    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
+
 #include <SPI.h>
 
 #ifndef Adafruit_SPIDevice_h
@@ -97,3 +100,4 @@ private:
 };
 
 #endif // Adafruit_SPIDevice_h
+#endif // has SPI defined

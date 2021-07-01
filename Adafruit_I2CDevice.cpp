@@ -50,8 +50,14 @@ bool Adafruit_I2CDevice::detected(void) {
   // A basic scanner, see if it ACK's
   _wire->beginTransmission(_addr);
   if (_wire->endTransmission() == 0) {
+#ifdef DEBUG_SERIAL
+    DEBUG_SERIAL.println(F("Detected"));
+#endif
     return true;
   }
+#ifdef DEBUG_SERIAL
+  DEBUG_SERIAL.println(F("Not detected"));
+#endif
   return false;
 }
 
@@ -125,7 +131,8 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
 #endif
 
 #ifdef DEBUG_SERIAL
-  // DEBUG_SERIAL.print("Stop: "); DEBUG_SERIAL.println(stop);
+  DEBUG_SERIAL.print("Stop: ");
+  DEBUG_SERIAL.println(stop);
 #endif
 
   if (_wire->endTransmission(stop) == 0) {
@@ -160,7 +167,12 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
     return false;
   }
 
+#if defined(TinyWireM_h)
+  size_t recv = _wire->requestFrom((uint8_t)_addr, (uint8_t)len);
+#else
   size_t recv = _wire->requestFrom((uint8_t)_addr, (uint8_t)len, (uint8_t)stop);
+#endif
+
   if (recv != len) {
     // Not enough data available to fulfill our obligation!
 #ifdef DEBUG_SERIAL
@@ -227,10 +239,11 @@ uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
  *    Not necessarily that the speed was achieved!
  */
 bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
-#if (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER)
+#if (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) && !defined(TinyWireM_h)
   _wire->setClock(desiredclk);
   return true;
 #else
+  (void)desiredclk;
   return false;
 #endif
 }
