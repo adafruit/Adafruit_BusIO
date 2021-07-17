@@ -34,6 +34,7 @@ typedef enum _BitOrder {
 // Some platforms have a BitOrder enum but its named MSBFIRST/LSBFIRST
 #define SPI_BITORDER_MSBFIRST MSBFIRST
 #define SPI_BITORDER_LSBFIRST LSBFIRST
+typedef BitOrder BusIOBitOrder;
 #endif
 
 #if defined(__AVR__) || defined(TEENSYDUINO)
