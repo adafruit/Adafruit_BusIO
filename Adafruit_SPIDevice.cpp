@@ -16,8 +16,8 @@
  *    @param  theSPI The SPI bus to use, defaults to &theSPI
  */
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
-                                       BitOrder dataOrder, uint8_t dataMode,
-                                       SPIClass *theSPI) {
+                                       BusIOBitOrder dataOrder,
+                                       uint8_t dataMode, SPIClass *theSPI) {
   _cs = cspin;
   _sck = _mosi = _miso = -1;
   _spi = theSPI;
@@ -43,7 +43,7 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
  */
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
                                        int8_t misopin, int8_t mosipin,
-                                       uint32_t freq, BitOrder dataOrder,
+                                       uint32_t freq, BusIOBitOrder dataOrder,
                                        uint8_t dataMode) {
   _cs = cspin;
   _sck = sckpin;
