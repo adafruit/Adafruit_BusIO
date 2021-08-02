@@ -24,10 +24,15 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
  *    @param  addr_detect Whether we should attempt to detect the I2C address
  * with a scan. 99% of sensors/devices don't mind but once in a while, they spaz
  * on a scan!
+ *    @param dontInitialize Whether to initialize the given TwoWire object.
  *    @return True if I2C initialized and a device with the addr found
  */
-bool Adafruit_I2CDevice::begin(bool addr_detect) {
-  _wire->begin();
+bool Adafruit_I2CDevice::begin(bool addr_detect, const bool dontInitialize) {
+  if (!dontInitialize)
+  {
+    const bool ok = _wire->begin();
+    if (!ok) return false;
+  }
   _begun = true;
 
   if (addr_detect) {

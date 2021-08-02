@@ -8,7 +8,7 @@ class Adafruit_I2CDevice {
 public:
   Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire = &Wire);
   uint8_t address(void);
-  bool begin(bool addr_detect = true);
+  bool begin(bool addr_detect = true, const bool dontInitialize = false);
   bool detected(void);
 
   bool read(uint8_t *buffer, size_t len, bool stop = true);
