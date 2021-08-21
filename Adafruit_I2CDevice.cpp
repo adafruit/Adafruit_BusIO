@@ -92,7 +92,7 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
 
   // Write the data itself, chunkify if needed
   size_t bufferSize = maxBufferSize();
-  if (bufferSize > len) {
+  if (bufferSize >= len) {
     // can just write
     if (_wire->write(buffer, len) != len) {
 #ifdef DEBUG_SERIAL
@@ -167,7 +167,7 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
  */
 bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
   size_t bufferSize = maxBufferSize();
-  if (bufferSize > len) {
+  if (bufferSize >= len) {
     // can just read
     return _read(buffer, len, stop);
   } else {
