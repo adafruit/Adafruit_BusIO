@@ -131,7 +131,7 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
 #endif
 
 #ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print("Stop: ");
+  DEBUG_SERIAL.print("\tStop: ");
   DEBUG_SERIAL.println(stop);
 #endif
 
@@ -142,7 +142,7 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
     return true;
   } else {
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println("Failed to send!");
+    DEBUG_SERIAL.println("\tFailed to send!");
 #endif
     return false;
   }
