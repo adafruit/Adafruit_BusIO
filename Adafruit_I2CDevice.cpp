@@ -159,8 +159,9 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
 bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
   size_t pos = 0;
   while (pos < len) {
-    size_t read_len = len - pos > maxBufferSize() ? maxBufferSize() : len - pos;
-    bool read_stop = pos < (len - read_len) ? false : stop;
+    size_t read_len =
+        ((len - pos) > maxBufferSize()) ? maxBufferSize() : (len - pos);
+    bool read_stop = (pos < (len - read_len)) ? false : stop;
     if (!_read(buffer + pos, read_len, read_stop))
       return false;
     pos += read_len;
