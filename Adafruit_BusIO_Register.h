@@ -4,8 +4,6 @@
 
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
-#define HAS_SPI
-#endif // SPI exists
 
 #ifndef Adafruit_BusIO_Register_h
 #define Adafruit_BusIO_Register_h
@@ -47,7 +45,6 @@ public:
                           uint8_t width = 1, uint8_t byteorder = LSBFIRST,
                           uint8_t address_width = 1);
 
-#ifdef HAS_SPI
   Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice, uint16_t reg_addr,
                           Adafruit_BusIO_SPIRegType type, uint8_t width = 1,
                           uint8_t byteorder = LSBFIRST,
@@ -58,7 +55,6 @@ public:
                           Adafruit_BusIO_SPIRegType type, uint16_t reg_addr,
                           uint8_t width = 1, uint8_t byteorder = LSBFIRST,
                           uint8_t address_width = 1);
-#endif
 
   bool read(uint8_t *buffer, uint8_t len);
   bool read(uint8_t *value);
@@ -79,9 +75,7 @@ public:
 
 private:
   Adafruit_I2CDevice *_i2cdevice;
-#ifdef HAS_SPI
   Adafruit_SPIDevice *_spidevice;
-#endif
   Adafruit_BusIO_SPIRegType _spiregtype;
   uint16_t _address;
   uint8_t _width, _addrwidth, _byteorder;
@@ -107,3 +101,5 @@ private:
 };
 
 #endif // BusIO_Register_h
+
+#endif // SPI exists
