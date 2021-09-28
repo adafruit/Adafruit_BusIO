@@ -1,8 +1,5 @@
 #include <Adafruit_BusIO_Register.h>
 
-#if !defined(SPI_INTERFACES_COUNT) ||                                          \
-    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
-
 /*!
  *    @brief  Create a register we access over an I2C Device (which defines the
  * bus and address)
@@ -21,7 +18,9 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice,
                                                  uint8_t byteorder,
                                                  uint8_t address_width) {
   _i2cdevice = i2cdevice;
+#ifdef HAS_SPI
   _spidevice = NULL;
+#endif
   _addrwidth = address_width;
   _address = reg_addr;
   _byteorder = byteorder;
@@ -42,6 +41,7 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice,
  *    @param  address_width The width of the register address itself, defaults
  * to 1 byte
  */
+#ifdef HAS_SPI
 Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
                                                  uint16_t reg_addr,
                                                  Adafruit_BusIO_SPIRegType type,
@@ -87,6 +87,7 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(
   _byteorder = byteorder;
   _width = width;
 }
+#endif
 
 /*!
  *    @brief  Write a buffer of data to the register location
@@ -103,6 +104,7 @@ bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
   if (_i2cdevice) {
     return _i2cdevice->write(buffer, len, true, addrbuffer, _addrwidth);
   }
+#ifdef HAS_SPI
   if (_spidevice) {
     if (_spiregtype == ADDRESSED_OPCODE_BIT0_LOW_TO_WRITE) {
       // very special case!
@@ -129,6 +131,7 @@ bool Adafruit_BusIO_Register::write(uint8_t *buffer, uint8_t len) {
     }
     return _spidevice->write(buffer, len, addrbuffer, _addrwidth);
   }
+#endif
   return false;
 }
 
@@ -205,6 +208,7 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
   if (_i2cdevice) {
     return _i2cdevice->write_then_read(addrbuffer, _addrwidth, buffer, len);
   }
+#ifdef HAS_SPI
   if (_spidevice) {
     if (_spiregtype == ADDRESSED_OPCODE_BIT0_LOW_TO_WRITE) {
       // very special case!
@@ -230,6 +234,7 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
     }
     return _spidevice->write_then_read(addrbuffer, _addrwidth, buffer, len);
   }
+#endif
   return false;
 }
 
@@ -361,5 +366,3 @@ void Adafruit_BusIO_Register::setAddress(uint16_t address) {
 void Adafruit_BusIO_Register::setAddressWidth(uint16_t address_width) {
   _addrwidth = address_width;
 }
-
-#endif // SPI exists
