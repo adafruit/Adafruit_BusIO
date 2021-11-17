@@ -6,7 +6,11 @@
 ///< The class which defines how we will talk to this device over I2C
 class Adafruit_I2CDevice {
 public:
+#ifdef ARDUINO_SAMD_ZERO
   Adafruit_I2CDevice(uint8_t addr, arduino::TwoWire *theWire = &Wire);
+#else
+  Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire = &Wire);
+#endif
   uint8_t address(void);
   bool begin(bool addr_detect = true);
   bool detected(void);
@@ -25,7 +29,11 @@ public:
 
 private:
   uint8_t _addr;
+#ifdef ARDUINO_SAMD_ZERO
   arduino::TwoWire *_wire;
+#else
+  TwoWire *_wire;
+#endif
   bool _begun;
   size_t _maxBufferSize;
   bool _read(uint8_t *buffer, size_t len, bool stop);
