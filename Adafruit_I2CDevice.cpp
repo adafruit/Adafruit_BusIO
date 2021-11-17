@@ -127,16 +127,15 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
       DEBUG_SERIAL.println();
     }
   }
-  DEBUG_SERIAL.println();
-#endif
 
-#ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print("\tStop: ");
-  DEBUG_SERIAL.println(stop);
+  if (stop) {
+    DEBUG_SERIAL.print("\tSTOP");
+  }
 #endif
 
   if (_wire->endTransmission(stop) == 0) {
 #ifdef DEBUG_SERIAL
+    DEBUG_SERIAL.println();
     // DEBUG_SERIAL.println("Sent!");
 #endif
     return true;
