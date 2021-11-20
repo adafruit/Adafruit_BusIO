@@ -1,6 +1,8 @@
 #ifndef Adafruit_BusIO_Register_h
 #define Adafruit_BusIO_Register_h
 
+#include <Arduino.h>
+
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
