@@ -35,9 +35,12 @@ bool Adafruit_I2CDevice::begin(bool addr_detect) {
   return true;
 }
 
-void Adafruit_I2CDevice::end(void)
-{
+void Adafruit_I2CDevice::end(void) {
+#ifndef ESP8266
+  // ESP8266 does not implement Wire::end()
   _wire->end();
+#endif
+
   _begun = false;
 }
 
