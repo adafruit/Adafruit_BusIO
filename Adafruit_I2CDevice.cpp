@@ -35,6 +35,12 @@ bool Adafruit_I2CDevice::begin(bool addr_detect) {
   return true;
 }
 
+void Adafruit_I2CDevice::end(void)
+{
+  _wire->end();
+  _begun = false;
+}
+
 /*!
  *    @brief  Scans I2C for the address - note will give a false-positive
  *    if there's no pullups on I2C
