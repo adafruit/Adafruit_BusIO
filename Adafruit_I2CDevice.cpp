@@ -36,6 +36,18 @@ bool Adafruit_I2CDevice::begin(bool addr_detect) {
 }
 
 /*!
+ *    @brief  De-initialize device, turn off the Wire interface
+ */
+void Adafruit_I2CDevice::end(void) {
+#ifndef ESP8266
+  // ESP8266 does not implement Wire::end()
+  _wire->end();
+#endif
+
+  _begun = false;
+}
+
+/*!
  *    @brief  Scans I2C for the address - note will give a false-positive
  *    if there's no pullups on I2C
  *    @return True if I2C initialized and a device with the addr found

@@ -10,6 +10,7 @@ public:
   Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire = &Wire);
   uint8_t address(void);
   bool begin(bool addr_detect = true);
+  void end(void);
   bool detected(void);
 
   bool read(uint8_t *buffer, size_t len, bool stop = true);
