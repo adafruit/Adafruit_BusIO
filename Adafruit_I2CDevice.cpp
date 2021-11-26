@@ -39,12 +39,13 @@ bool Adafruit_I2CDevice::begin(bool addr_detect) {
  *    @brief  De-initialize device, turn off the Wire interface
  */
 void Adafruit_I2CDevice::end(void) {
-#ifndef ESP8266
-  // ESP8266 does not implement Wire::end()
+  // Not all port implement Wire::end(), such as
+  // - ESP8266
+  // - AVR core without WIRE_HAS_END
+#if ! ( defined(ESP8266) || (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)) )
   _wire->end();
-#endif
-
   _begun = false;
+#endif
 }
 
 /*!
