@@ -42,7 +42,11 @@ void Adafruit_I2CDevice::end(void) {
   // Not all port implement Wire::end(), such as
   // - ESP8266
   // - AVR core without WIRE_HAS_END
-#if !(defined(ESP8266) || (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)))
+  // - ESP32: end() is implemented since 2.0.1 which is latest at the moment.
+  // Temporarily disable for now to give time for user to update.
+#if !(defined(ESP8266) ||                                                      \
+      (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)) ||                 \
+      defined(ARDUINO_ARCH_ESP32))
   _wire->end();
   _begun = false;
 #endif
