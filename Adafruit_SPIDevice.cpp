@@ -7,7 +7,7 @@
 //#define DEBUG_SERIAL Serial
 
 /*!
- *    @brief  Create an SPI device with the given CS pin and settins
+ *    @brief  Create an SPI device with the given CS pin and settings
  *    @param  cspin The arduino pin number to use for chip select
  *    @param  freq The SPI clock frequency to use, defaults to 1MHz
  *    @param  dataOrder The SPI data order to use for bits within each byte,
@@ -29,7 +29,7 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
 }
 
 /*!
- *    @brief  Create an SPI device with the given CS pin and settins
+ *    @brief  Create an SPI device with the given CS pin and settings
  *    @param  cspin The arduino pin number to use for chip select
  *    @param  sckpin The arduino pin number to use for SCK
  *    @param  misopin The arduino pin number to use for MISO, set to -1 if not
