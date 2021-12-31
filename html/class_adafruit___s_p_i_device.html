@@ -92,6 +92,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8128f7d67b3e0e56717279deb64227e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a8128f7d67b3e0e56717279deb64227e7">write_then_read</a> (uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue=0xFF)</td></tr>
 <tr class="memdesc:a8128f7d67b3e0e56717279deb64227e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!  <a href="#a8128f7d67b3e0e56717279deb64227e7">More...</a><br /></td></tr>
 <tr class="separator:a8128f7d67b3e0e56717279deb64227e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a808c81bc4b9e42d064b9f590a1f6b1bd">write_and_read</a> (uint8_t *buffer, size_t len)</td></tr>
+<tr class="memdesc:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data and read some data at the same time from SPI into the same buffer. This is basicaly a wrapper for <a class="el" href="class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889" title="Transfer (send/receive) one byte over hard/soft SPI. ">transfer()</a> with CS-pin and transaction management. This /does/ transmit-receive at the same time!  <a href="#a808c81bc4b9e42d064b9f590a1f6b1bd">More...</a><br /></td></tr>
+<tr class="separator:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac60964386f37b2c498fc1b1540f61889"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889">transfer</a> (uint8_t send)</td></tr>
 <tr class="memdesc:ac60964386f37b2c498fc1b1540f61889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer (send/receive) one byte over hard/soft SPI.  <a href="#ac60964386f37b2c498fc1b1540f61889">More...</a><br /></td></tr>
 <tr class="separator:ac60964386f37b2c498fc1b1540f61889"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -411,6 +414,44 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
     <tr><td class="paramname">read_buffer</td><td>Pointer to buffer of data to read into. </td></tr>
     <tr><td class="paramname">read_len</td><td>Number of bytes from buffer to read. </td></tr>
     <tr><td class="paramname">sendvalue</td><td>The 8-bits of data to write when doing the data read, defaults to 0xFF </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Always returns true because there's no way to test success of SPI writes </dd></dl>
+
+</div>
+</div>
+<a id="a808c81bc4b9e42d064b9f590a1f6b1bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a808c81bc4b9e42d064b9f590a1f6b1bd">&#9670;&nbsp;</a></span>write_and_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_SPIDevice::write_and_read </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write some data and read some data at the same time from SPI into the same buffer. This is basicaly a wrapper for <a class="el" href="class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889" title="Transfer (send/receive) one byte over hard/soft SPI. ">transfer()</a> with CS-pin and transaction management. This /does/ transmit-receive at the same time! </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>Pointer to buffer of data to write/read to/from </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes from buffer to write/read. </td></tr>
   </table>
   </dd>
 </dl>
