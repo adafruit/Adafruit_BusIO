@@ -301,11 +301,23 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
 
   digitalWrite(_cs, LOW);
   // do the writing
-  for (size_t i = 0; i < prefix_len; i++) {
-    transfer(prefix_buffer[i]);
-  }
-  for (size_t i = 0; i < len; i++) {
-    transfer(buffer[i]);
+#if defined(ARDUINO_ARCH_ESP32)
+  if (_spi) {
+    if (prefix_len > 0) {
+      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
+    }
+    if (len > 0) {
+      _spi->transferBytes(buffer, nullptr, len);
+    }
+  } else
+#endif
+  {
+    for (size_t i = 0; i < prefix_len; i++) {
+      transfer(prefix_buffer[i]);
+    }
+    for (size_t i = 0; i < len; i++) {
+      transfer(buffer[i]);
+    }
   }
   digitalWrite(_cs, HIGH);
 
@@ -396,8 +408,17 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
 
   digitalWrite(_cs, LOW);
   // do the writing
-  for (size_t i = 0; i < write_len; i++) {
-    transfer(write_buffer[i]);
+#if defined(ARDUINO_ARCH_ESP32)
+  if (_spi) {
+    if (write_len > 0) {
+      _spi->transferBytes(write_buffer, nullptr, write_len);
+    }
+  } else
+#endif
+  {
+    for (size_t i = 0; i < write_len; i++) {
+      transfer(write_buffer[i]);
+    }
   }
 
 #ifdef DEBUG_SERIAL
