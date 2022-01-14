@@ -310,6 +310,15 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
       _spi->transferBytes(buffer, nullptr, len);
     }
   } else
+#elif defined(ARDUINO_ARCH_SAMD)
+  if (_spi) {
+    if (prefix_len > 0) {
+      _spi->transfer(prefix_buffer, nullptr, prefix_len);
+    }
+    if (len > 0) {
+      _spi->transfer(buffer, nullptr, len);
+    }
+  } else
 #endif
   {
     for (size_t i = 0; i < prefix_len; i++) {
@@ -412,6 +421,12 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
   if (_spi) {
     if (write_len > 0) {
       _spi->transferBytes(write_buffer, nullptr, write_len);
+    }
+  } else
+#elif defined(ARDUINO_ARCH_SAMD)
+  if (_spi) {
+    if (write_len > 0) {
+      _spi->transfer(write_buffer, nullptr, write_len);
     }
   } else
 #endif
