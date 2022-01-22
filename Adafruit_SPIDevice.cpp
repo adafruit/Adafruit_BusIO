@@ -311,13 +311,13 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
     }
   } else
 #elif defined(ARDUINO_ARCH_SAMD) && defined(_ADAFRUIT_ZERODMA_H_)
-  // The variant of transfer() used below currently only exists in the Adafruit core.
-  // It causes a build failure when building against the main Arduino SAMD core.
-  // Unfortunately there doesn't seem to be a supported #define that this code
-  // can use to tell which core it's building against. This hack
-  // (checking for the include guard that gets defined when the Adafruit core's
-  // SPI.h includes Adafruit_ZeroDMA.h) works for now, but it should be improved
-  // when possible.
+  // The variant of transfer() used below currently only exists in the Adafruit
+  // core. It causes a build failure when building against the main Arduino SAMD
+  // core. Unfortunately there doesn't seem to be a supported #define that this
+  // code can use to tell which core it's building against. This hack (checking
+  // for the include guard that gets defined when the Adafruit core's SPI.h
+  // includes Adafruit_ZeroDMA.h) works for now, but it should be improved when
+  // possible.
   if (_spi) {
     if (prefix_len > 0) {
       _spi->transfer(prefix_buffer, nullptr, prefix_len);
@@ -431,13 +431,13 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
     }
   } else
 #elif defined(ARDUINO_ARCH_SAMD) && defined(_ADAFRUIT_ZERODMA_H_)
-  // The variant of transfer() used below currently only exists in the Adafruit core.
-  // It causes a build failure when building against the main Arduino SAMD core.
-  // Unfortunately there doesn't seem to be a supported #define that this code
-  // can use to tell which core it's building against. This hack
-  // (checking for the include guard that gets defined when the Adafruit core's
-  // SPI.h includes Adafruit_ZeroDMA.h) works for now, but it should be improved
-  // when possible.
+  // The variant of transfer() used below currently only exists in the Adafruit
+  // core. It causes a build failure when building against the main Arduino SAMD
+  // core. Unfortunately there doesn't seem to be a supported #define that this
+  // code can use to tell which core it's building against. This hack (checking
+  // for the include guard that gets defined when the Adafruit core's SPI.h
+  // includes Adafruit_ZeroDMA.h) works for now, but it should be improved when
+  // possible.
   if (_spi) {
     if (write_len > 0) {
       _spi->transfer(write_buffer, nullptr, write_len);
