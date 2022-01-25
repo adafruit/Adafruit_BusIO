@@ -95,6 +95,7 @@ private:
   uint32_t _freq;
   BusIOBitOrder _dataOrder;
   uint8_t _dataMode;
+  void setChipSelect(int value);
 
   int8_t _cs, _sck, _mosi, _miso;
 #ifdef BUSIO_USE_FAST_PINIO
