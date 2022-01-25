@@ -88,8 +88,10 @@ Adafruit_SPIDevice::~Adafruit_SPIDevice() {
  * init
  */
 bool Adafruit_SPIDevice::begin(void) {
-  pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH);
+  if (_cs != -1) {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH);
+  }
 
   if (_spi) { // hardware SPI
     _spi->begin();
@@ -299,7 +301,7 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
     _spi->beginTransaction(*_spiSetting);
   }
 
-  digitalWrite(_cs, LOW);
+  setChipSelect(LOW);
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -319,7 +321,7 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
       transfer(buffer[i]);
     }
   }
-  digitalWrite(_cs, HIGH);
+  setChipSelect(HIGH);
 
   if (_spi) {
     _spi->endTransaction();
@@ -362,9 +364,10 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   if (_spi) {
     _spi->beginTransaction(*_spiSetting);
   }
-  digitalWrite(_cs, LOW);
+
+  setChipSelect(LOW);
   transfer(buffer, len);
-  digitalWrite(_cs, HIGH);
+  setChipSelect(HIGH);
 
   if (_spi) {
     _spi->endTransaction();
@@ -406,7 +409,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
     _spi->beginTransaction(*_spiSetting);
   }
 
-  digitalWrite(_cs, LOW);
+  setChipSelect(LOW);
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -452,7 +455,7 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
   DEBUG_SERIAL.println();
 #endif
 
-  digitalWrite(_cs, HIGH);
+  setChipSelect(HIGH);
 
   if (_spi) {
     _spi->endTransaction();
@@ -476,17 +479,21 @@ bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
     _spi->beginTransaction(*_spiSetting);
   }
 
-  digitalWrite(_cs, LOW);
-
+  setChipSelect(LOW);
   transfer(buffer, len);
-
-  digitalWrite(_cs, HIGH);
+  setChipSelect(HIGH);
 
   if (_spi) {
     _spi->endTransaction();
   }
 
   return true;
+}
+
+void Adafruit_SPIDevice::setChipSelect(int value) {
+  if (_cs == -1)
+    return;
+  digitalWrite(_cs, value);
 }
 
 #endif // SPI exists
