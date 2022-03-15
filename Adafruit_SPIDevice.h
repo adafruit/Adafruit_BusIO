@@ -77,9 +77,9 @@ public:
 
   bool begin(void);
   bool read(uint8_t *buffer, size_t len, uint8_t sendvalue = 0xFF);
-  bool write(uint8_t *buffer, size_t len, uint8_t *prefix_buffer = NULL,
-             size_t prefix_len = 0);
-  bool write_then_read(uint8_t *write_buffer, size_t write_len,
+  bool write(const uint8_t *buffer, size_t len,
+             const uint8_t *prefix_buffer = NULL, size_t prefix_len = 0);
+  bool write_then_read(const uint8_t *write_buffer, size_t write_len,
                        uint8_t *read_buffer, size_t read_len,
                        uint8_t sendvalue = 0xFF);
   bool write_and_read(uint8_t *buffer, size_t len);

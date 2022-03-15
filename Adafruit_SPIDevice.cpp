@@ -295,8 +295,9 @@ void Adafruit_SPIDevice::endTransaction(void) {
  *    @return Always returns true because there's no way to test success of SPI
  * writes
  */
-bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len,
-                               uint8_t *prefix_buffer, size_t prefix_len) {
+bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
+                               const uint8_t *prefix_buffer,
+                               size_t prefix_len) {
   if (_spi) {
     _spi->beginTransaction(*_spiSetting);
   }
@@ -402,7 +403,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
  *    @return Always returns true because there's no way to test success of SPI
  * writes
  */
-bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer,
+bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
   if (_spi) {
