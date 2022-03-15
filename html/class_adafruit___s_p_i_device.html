@@ -86,12 +86,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5c4fce15c92a0210c0872a827f239ab1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a5c4fce15c92a0210c0872a827f239ab1">read</a> (uint8_t *buffer, size_t len, uint8_t sendvalue=0xFF)</td></tr>
 <tr class="memdesc:a5c4fce15c92a0210c0872a827f239ab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from SPI into a buffer from the SPI device.  <a href="#a5c4fce15c92a0210c0872a827f239ab1">More...</a><br /></td></tr>
 <tr class="separator:a5c4fce15c92a0210c0872a827f239ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98bc2e396650883935a5cb432716956a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a98bc2e396650883935a5cb432716956a">write</a> (uint8_t *buffer, size_t len, uint8_t *prefix_buffer=NULL, size_t prefix_len=0)</td></tr>
-<tr class="memdesc:a98bc2e396650883935a5cb432716956a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the SPI device.  <a href="#a98bc2e396650883935a5cb432716956a">More...</a><br /></td></tr>
-<tr class="separator:a98bc2e396650883935a5cb432716956a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8128f7d67b3e0e56717279deb64227e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a8128f7d67b3e0e56717279deb64227e7">write_then_read</a> (uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue=0xFF)</td></tr>
-<tr class="memdesc:a8128f7d67b3e0e56717279deb64227e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!  <a href="#a8128f7d67b3e0e56717279deb64227e7">More...</a><br /></td></tr>
-<tr class="separator:a8128f7d67b3e0e56717279deb64227e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc145b39e822acdddb409841b1f11012"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#acc145b39e822acdddb409841b1f11012">write</a> (const uint8_t *buffer, size_t len, const uint8_t *prefix_buffer=NULL, size_t prefix_len=0)</td></tr>
+<tr class="memdesc:acc145b39e822acdddb409841b1f11012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the SPI device.  <a href="#acc145b39e822acdddb409841b1f11012">More...</a><br /></td></tr>
+<tr class="separator:acc145b39e822acdddb409841b1f11012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cc3386cab3750aa18bbf3918261fc54"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a9cc3386cab3750aa18bbf3918261fc54">write_then_read</a> (const uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue=0xFF)</td></tr>
+<tr class="memdesc:a9cc3386cab3750aa18bbf3918261fc54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!  <a href="#a9cc3386cab3750aa18bbf3918261fc54">More...</a><br /></td></tr>
+<tr class="separator:a9cc3386cab3750aa18bbf3918261fc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a808c81bc4b9e42d064b9f590a1f6b1bd">write_and_read</a> (uint8_t *buffer, size_t len)</td></tr>
 <tr class="memdesc:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data and read some data at the same time from SPI into the same buffer. This is basicaly a wrapper for <a class="el" href="class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889" title="Transfer (send/receive) one byte over hard/soft SPI. ">transfer()</a> with CS-pin and transaction management. This /does/ transmit-receive at the same time!  <a href="#a808c81bc4b9e42d064b9f590a1f6b1bd">More...</a><br /></td></tr>
 <tr class="separator:a808c81bc4b9e42d064b9f590a1f6b1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,8 +310,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a98bc2e396650883935a5cb432716956a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98bc2e396650883935a5cb432716956a">&#9670;&nbsp;</a></span>write()</h2>
+<a id="acc145b39e822acdddb409841b1f11012"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc145b39e822acdddb409841b1f11012">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,7 +319,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="memname">bool Adafruit_SPIDevice::write </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -331,7 +331,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>prefix_buffer</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -362,8 +362,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a8128f7d67b3e0e56717279deb64227e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8128f7d67b3e0e56717279deb64227e7">&#9670;&nbsp;</a></span>write_then_read()</h2>
+<a id="a9cc3386cab3750aa18bbf3918261fc54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cc3386cab3750aa18bbf3918261fc54">&#9670;&nbsp;</a></span>write_then_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -371,7 +371,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="memname">bool Adafruit_SPIDevice::write_then_read </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>write_buffer</em>, </td>
         </tr>
         <tr>
