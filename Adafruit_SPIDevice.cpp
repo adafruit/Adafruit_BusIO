@@ -296,7 +296,8 @@ void Adafruit_SPIDevice::endTransaction(void) {
  * writes
  */
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
-                               const uint8_t *prefix_buffer, size_t prefix_len) {
+                               const uint8_t *prefix_buffer,
+                               size_t prefix_len) {
   if (_spi) {
     _spi->beginTransaction(*_spiSetting);
   }
