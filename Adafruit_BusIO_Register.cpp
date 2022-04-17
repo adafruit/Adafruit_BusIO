@@ -21,7 +21,7 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_I2CDevice *i2cdevice,
                                                  uint8_t byteorder,
                                                  uint8_t address_width) {
   _i2cdevice = i2cdevice;
-  _spidevice = NULL;
+  _spidevice = nullptr;
   _addrwidth = address_width;
   _address = reg_addr;
   _byteorder = byteorder;
@@ -50,7 +50,7 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
                                                  uint8_t address_width) {
   _spidevice = spidevice;
   _spiregtype = type;
-  _i2cdevice = NULL;
+  _i2cdevice = nullptr;
   _addrwidth = address_width;
   _address = reg_addr;
   _byteorder = byteorder;
@@ -59,12 +59,12 @@ Adafruit_BusIO_Register::Adafruit_BusIO_Register(Adafruit_SPIDevice *spidevice,
 
 /*!
  *    @brief  Create a register we access over an I2C or SPI Device. This is a
- * handy function because we can pass in NULL for the unused interface, allowing
- * libraries to mass-define all the registers
- *    @param  i2cdevice The I2CDevice to use for underlying I2C access, if NULL
- * we use SPI
- *    @param  spidevice The SPIDevice to use for underlying SPI access, if NULL
- * we use I2C
+ * handy function because we can pass in nullptr for the unused interface,
+ * allowing libraries to mass-define all the registers
+ *    @param  i2cdevice The I2CDevice to use for underlying I2C access, if
+ * nullptr we use SPI
+ *    @param  spidevice The SPIDevice to use for underlying SPI access, if
+ * nullptr we use I2C
  *    @param  reg_addr The address pointer value for the I2C/SMBus/SPI register,
  * can be 8 or 16 bits
  *    @param  type     The method we use to read/write data to SPI (which is not

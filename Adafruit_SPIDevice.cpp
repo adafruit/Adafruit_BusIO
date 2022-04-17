@@ -69,7 +69,7 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   _dataMode = dataMode;
   _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
-  _spi = NULL;
+  _spi = nullptr;
 }
 
 /*!
@@ -123,7 +123,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // hardware SPI is easy
 
 #if defined(SPARK)
-    _spi->transfer(buffer, buffer, len, NULL);
+    _spi->transfer(buffer, buffer, len, nullptr);
 #elif defined(STM32)
     for (size_t i = 0; i < len; i++) {
       _spi->transfer(buffer[i]);
@@ -325,7 +325,7 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
-  if ((prefix_len != 0) && (prefix_buffer != NULL)) {
+  if ((prefix_len != 0) && (prefix_buffer != nullptr)) {
     for (uint16_t i = 0; i < prefix_len; i++) {
       DEBUG_SERIAL.print(F("0x"));
       DEBUG_SERIAL.print(prefix_buffer[i], HEX);
