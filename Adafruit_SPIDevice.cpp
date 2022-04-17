@@ -75,12 +75,7 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
 /*!
  *    @brief  Release memory allocated in constructors
  */
-Adafruit_SPIDevice::~Adafruit_SPIDevice() {
-  if (_spiSetting) {
-    delete _spiSetting;
-    _spiSetting = nullptr;
-  }
-}
+Adafruit_SPIDevice::~Adafruit_SPIDevice() { delete _spiSetting; }
 
 /*!
  *    @brief  Initializes SPI bus and sets CS pin high
