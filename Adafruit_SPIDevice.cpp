@@ -124,7 +124,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
 
 #if defined(SPARK)
     _spi->transfer(buffer, buffer, len, nullptr);
-#elif defined(STM32)
+#elif defined(STM32) || defined(ESP8266)
     for (size_t i = 0; i < len; i++) {
       _spi->transfer(buffer[i]);
     }
