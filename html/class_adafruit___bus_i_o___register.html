@@ -80,7 +80,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a89e57552743a5f15c99cb7aa27b3ca13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a register we access over an SPI Device (which defines the bus and CS pin)  <a href="#a89e57552743a5f15c99cb7aa27b3ca13">More...</a><br /></td></tr>
 <tr class="separator:a89e57552743a5f15c99cb7aa27b3ca13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a300a0297429df441bc88dbb37eac1a06"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a300a0297429df441bc88dbb37eac1a06">Adafruit_BusIO_Register</a> (<a class="el" href="class_adafruit___i2_c_device.html">Adafruit_I2CDevice</a> *i2cdevice, <a class="el" href="class_adafruit___s_p_i_device.html">Adafruit_SPIDevice</a> *spidevice, Adafruit_BusIO_SPIRegType type, uint16_t reg_addr, uint8_t <a class="el" href="class_adafruit___bus_i_o___register.html#abf1eaeb0ae836be082a73dae14e7e352">width</a>=1, uint8_t byteorder=LSBFIRST, uint8_t address_width=1)</td></tr>
-<tr class="memdesc:a300a0297429df441bc88dbb37eac1a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a register we access over an I2C or SPI Device. This is a handy function because we can pass in NULL for the unused interface, allowing libraries to mass-define all the registers.  <a href="#a300a0297429df441bc88dbb37eac1a06">More...</a><br /></td></tr>
+<tr class="memdesc:a300a0297429df441bc88dbb37eac1a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a register we access over an I2C or SPI Device. This is a handy function because we can pass in nullptr for the unused interface, allowing libraries to mass-define all the registers.  <a href="#a300a0297429df441bc88dbb37eac1a06">More...</a><br /></td></tr>
 <tr class="separator:a300a0297429df441bc88dbb37eac1a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a2b48e23dacbb7cffc0eb07dcebcfba6f">read</a> (uint8_t *buffer, uint8_t len)</td></tr>
 <tr class="memdesc:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a buffer of data from the register location.  <a href="#a2b48e23dacbb7cffc0eb07dcebcfba6f">More...</a><br /></td></tr>
@@ -304,11 +304,11 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a register we access over an I2C or SPI Device. This is a handy function because we can pass in NULL for the unused interface, allowing libraries to mass-define all the registers. </p>
+<p>Create a register we access over an I2C or SPI Device. This is a handy function because we can pass in nullptr for the unused interface, allowing libraries to mass-define all the registers. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">i2cdevice</td><td>The I2CDevice to use for underlying I2C access, if NULL we use SPI </td></tr>
-    <tr><td class="paramname">spidevice</td><td>The SPIDevice to use for underlying SPI access, if NULL we use I2C </td></tr>
+    <tr><td class="paramname">i2cdevice</td><td>The I2CDevice to use for underlying I2C access, if nullptr we use SPI </td></tr>
+    <tr><td class="paramname">spidevice</td><td>The SPIDevice to use for underlying SPI access, if nullptr we use I2C </td></tr>
     <tr><td class="paramname">reg_addr</td><td>The address pointer value for the I2C/SMBus/SPI register, can be 8 or 16 bits </td></tr>
     <tr><td class="paramname">type</td><td>The method we use to read/write data to SPI (which is not as well defined as I2C) </td></tr>
     <tr><td class="paramname">width</td><td>The width of the register data itself, defaults to 1 byte </td></tr>

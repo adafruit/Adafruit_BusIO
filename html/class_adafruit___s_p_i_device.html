@@ -86,9 +86,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5c4fce15c92a0210c0872a827f239ab1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a5c4fce15c92a0210c0872a827f239ab1">read</a> (uint8_t *buffer, size_t len, uint8_t sendvalue=0xFF)</td></tr>
 <tr class="memdesc:a5c4fce15c92a0210c0872a827f239ab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from SPI into a buffer from the SPI device.  <a href="#a5c4fce15c92a0210c0872a827f239ab1">More...</a><br /></td></tr>
 <tr class="separator:a5c4fce15c92a0210c0872a827f239ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc145b39e822acdddb409841b1f11012"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#acc145b39e822acdddb409841b1f11012">write</a> (const uint8_t *buffer, size_t len, const uint8_t *prefix_buffer=NULL, size_t prefix_len=0)</td></tr>
-<tr class="memdesc:acc145b39e822acdddb409841b1f11012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the SPI device.  <a href="#acc145b39e822acdddb409841b1f11012">More...</a><br /></td></tr>
-<tr class="separator:acc145b39e822acdddb409841b1f11012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c984896fcc5d009511ce37a659fdb2e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a1c984896fcc5d009511ce37a659fdb2e">write</a> (const uint8_t *buffer, size_t len, const uint8_t *prefix_buffer=nullptr, size_t prefix_len=0)</td></tr>
+<tr class="memdesc:a1c984896fcc5d009511ce37a659fdb2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a buffer or two to the SPI device.  <a href="#a1c984896fcc5d009511ce37a659fdb2e">More...</a><br /></td></tr>
+<tr class="separator:a1c984896fcc5d009511ce37a659fdb2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cc3386cab3750aa18bbf3918261fc54"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___s_p_i_device.html#a9cc3386cab3750aa18bbf3918261fc54">write_then_read</a> (const uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue=0xFF)</td></tr>
 <tr class="memdesc:a9cc3386cab3750aa18bbf3918261fc54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!  <a href="#a9cc3386cab3750aa18bbf3918261fc54">More...</a><br /></td></tr>
 <tr class="separator:a9cc3386cab3750aa18bbf3918261fc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,8 +310,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="acc145b39e822acdddb409841b1f11012"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc145b39e822acdddb409841b1f11012">&#9670;&nbsp;</a></span>write()</h2>
+<a id="a1c984896fcc5d009511ce37a659fdb2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c984896fcc5d009511ce37a659fdb2e">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +332,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>prefix_buffer</em> = <code>NULL</code>, </td>
+          <td class="paramname"><em>prefix_buffer</em> = <code>nullptr</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
