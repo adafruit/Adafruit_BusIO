@@ -3,6 +3,9 @@
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
+//! constant for deciding when to allocate memory from the heap instead of the
+//! stack
+constexpr size_t minBufferSizeToMalloc = 32;
 //#define DEBUG_SERIAL Serial
 
 /*!
@@ -328,6 +331,7 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
   if (prefix_buffer == nullptr) {
     write_and_read(const_cast<uint8_t *>(buffer), len);
   } else {
+#if defined(__AVR__)
     beginTransactionWithAssertingCS();
 
     if (prefix_len) {
@@ -338,6 +342,26 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
     }
 
     endTransactionWithDeassertingCS();
+#else
+    size_t lenBuffer = prefix_len + len;
+    if (lenBuffer < minBufferSizeToMalloc) {
+      uint8_t tmpBuffer[lenBuffer];
+
+      memcpy(tmpBuffer, prefix_buffer, len);
+      memcpy(tmpBuffer + prefix_len, buffer, len);
+
+      write_and_read(tmpBuffer, lenBuffer);
+    } else {
+      auto tmpBuffer = new uint8_t[lenBuffer];
+
+      memcpy(tmpBuffer, prefix_buffer, len);
+      memcpy(tmpBuffer + prefix_len, buffer, len);
+
+      write_and_read(tmpBuffer, lenBuffer);
+
+      delete buffer;
+    }
+#endif
   }
 
 #ifdef DEBUG_SERIAL
@@ -410,6 +434,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
+#if defined(__AVR__)
   beginTransactionWithAssertingCS();
 
   if (write_len) {
@@ -423,6 +448,29 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   }
 
   endTransactionWithDeassertingCS();
+#else
+  size_t lenBuffer = write_len + read_len;
+  if (lenBuffer < minBufferSizeToMalloc) {
+    uint8_t tmpBuffer[lenBuffer];
+
+    memcpy(tmpBuffer, write_buffer, write_len);
+    memset(tmpBuffer + write_len, sendvalue, read_len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+
+    memcpy(read_buffer, tmpBuffer + write_len, read_len);
+  } else {
+    auto tmpBuffer = new uint8_t[lenBuffer];
+
+    memcpy(tmpBuffer, write_buffer, write_len);
+    memset(tmpBuffer + write_len, sendvalue, read_len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+
+    memcpy(read_buffer, tmpBuffer + write_len, read_len);
+    delete tmpBuffer;
+  }
+#endif
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
