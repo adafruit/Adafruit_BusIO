@@ -388,18 +388,9 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
  * writes
  */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
-  memset(buffer, sendvalue, len); // clear out existing buffer
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
+  memset(buffer, sendvalue, len);
 
-  setChipSelect(LOW);
-  transfer(buffer, len);
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  write_and_read(buffer, len);
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
