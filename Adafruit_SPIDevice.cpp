@@ -283,6 +283,36 @@ void Adafruit_SPIDevice::endTransaction(void) {
 }
 
 /*!
+ *    @brief  Assert/Deassert the CS pin if it is defined
+ *    @param  value The state the CS is set to
+ */
+void Adafruit_SPIDevice::setChipSelect(int value) {
+  if (_cs != -1) {
+    digitalWrite(_cs, value);
+  }
+}
+
+/*!
+ *    @brief  Write a buffer or two to the SPI device, with transaction
+ * management.
+ *    @brief  Manually begin a transaction (calls beginTransaction if hardware
+ *            SPI) with asserting the CS pin
+ */
+void Adafruit_SPIDevice::beginTransactionWithAssertingCS() {
+  beginTransaction();
+  setChipSelect(LOW);
+}
+
+/*!
+ *    @brief  Manually end a transaction (calls endTransaction if hardware SPI)
+ *            with deasserting the CS pin
+ */
+void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
+  setChipSelect(HIGH);
+  endTransaction();
+}
+
+/*!
  *    @brief  Write a buffer or two to the SPI device, with transaction
  * management.
  *    @param  buffer Pointer to buffer of data to write
@@ -296,11 +326,8 @@ void Adafruit_SPIDevice::endTransaction(void) {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
+  beginTransactionWithAssertingCS();
 
-  setChipSelect(LOW);
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -320,11 +347,7 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
       transfer(buffer[i]);
     }
   }
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
@@ -361,17 +384,10 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
  */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   memset(buffer, sendvalue, len); // clear out existing buffer
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
 
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   transfer(buffer, len);
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
@@ -405,11 +421,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -455,11 +467,7 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   DEBUG_SERIAL.println();
 #endif
 
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
   return true;
 }
@@ -475,29 +483,11 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
  * writes
  */
 bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   transfer(buffer, len);
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
   return true;
-}
-
-/*!
- *    @brief  Assert/Deassert the CS pin if it is defined
- *    @param  value The state the CS is set to
- */
-void Adafruit_SPIDevice::setChipSelect(int value) {
-  if (_cs == -1)
-    return;
-  digitalWrite(_cs, value);
 }
 
 #endif // SPI exists
