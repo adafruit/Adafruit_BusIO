@@ -3,6 +3,10 @@
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
+//! constant for deciding when to allocate memory from the heap instead of the
+//! stack
+constexpr size_t minBufferSizeToMalloc = 64;
+
 //#define DEBUG_SERIAL Serial
 
 /*!
@@ -296,35 +300,44 @@ void Adafruit_SPIDevice::endTransaction(void) {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
+#if defined(__AVR__)
   if (_spi) {
     _spi->beginTransaction(*_spiSetting);
   }
 
   setChipSelect(LOW);
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (prefix_len > 0) {
-      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
-    }
-    if (len > 0) {
-      _spi->transferBytes(buffer, nullptr, len);
-    }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < prefix_len; i++) {
-      transfer(prefix_buffer[i]);
-    }
-    for (size_t i = 0; i < len; i++) {
-      transfer(buffer[i]);
-    }
+
+  for (size_t i = 0; i < prefix_len; i++) {
+    transfer(prefix_buffer[i]);
+  }
+  for (size_t i = 0; i < len; i++) {
+    transfer(buffer[i]);
   }
   setChipSelect(HIGH);
 
   if (_spi) {
     _spi->endTransaction();
   }
+#else
+  size_t lenBuffer = prefix_len + len;
+  if (lenBuffer < minBufferSizeToMalloc) {
+    uint8_t tmpBuffer[lenBuffer];
+
+    memcpy(tmpBuffer, prefix_buffer, len);
+    memcpy(tmpBuffer + prefix_len, buffer, len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+  } else {
+    auto tmpBuffer = new uint8_t[lenBuffer];
+
+    memcpy(tmpBuffer, prefix_buffer, len);
+    memcpy(tmpBuffer + prefix_len, buffer, len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+
+    delete buffer;
+  }
+#endif // defined(__AVR__)
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
@@ -405,23 +418,15 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
+#if defined(__AVR__)
   if (_spi) {
     _spi->beginTransaction(*_spiSetting);
   }
 
   setChipSelect(LOW);
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (write_len > 0) {
-      _spi->transferBytes(write_buffer, nullptr, write_len);
-    }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < write_len; i++) {
-      transfer(write_buffer[i]);
-    }
+
+  for (size_t i = 0; i < write_len; i++) {
+    transfer(write_buffer[i]);
   }
 
 #ifdef DEBUG_SERIAL
@@ -460,6 +465,30 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   if (_spi) {
     _spi->endTransaction();
   }
+
+#else
+  size_t lenBuffer = write_len + read_len;
+  if (lenBuffer < minBufferSizeToMalloc) {
+    uint8_t tmpBuffer[lenBuffer];
+
+    memcpy(tmpBuffer, write_buffer, write_len);
+    memset(tmpBuffer + write_len, sendvalue, read_len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+
+    memcpy(read_buffer, tmpBuffer + write_len, read_len);
+  } else {
+    auto tmpBuffer = new uint8_t[lenBuffer];
+
+    memcpy(tmpBuffer, write_buffer, write_len);
+    memset(tmpBuffer + write_len, sendvalue, read_len);
+
+    write_and_read(tmpBuffer, lenBuffer);
+
+    memcpy(read_buffer, tmpBuffer + write_len, read_len);
+    delete tmpBuffer;
+  }
+#endif // defined(__AVR__)
 
   return true;
 }
