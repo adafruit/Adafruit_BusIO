@@ -411,24 +411,19 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
+  beginTransactionWithAssertingCS();
+
+  if (write_len) {
+    transfer(const_cast<uint8_t *>(write_buffer), write_len);
   }
 
-  setChipSelect(LOW);
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (write_len > 0) {
-      _spi->transferBytes(write_buffer, nullptr, write_len);
-    }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < write_len; i++) {
-      transfer(write_buffer[i]);
-    }
+  if (read_len) {
+    memset(read_buffer, sendvalue, read_len);
+
+    transfer(read_buffer, read_len);
   }
+
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
@@ -443,11 +438,6 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   DEBUG_SERIAL.println();
 #endif
 
-  // do the reading
-  for (size_t i = 0; i < read_len; i++) {
-    read_buffer[i] = transfer(sendvalue);
-  }
-
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
   for (uint16_t i = 0; i < read_len; i++) {
@@ -460,12 +450,6 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   }
   DEBUG_SERIAL.println();
 #endif
-
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
 
   return true;
 }
