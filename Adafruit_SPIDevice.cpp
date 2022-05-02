@@ -283,6 +283,16 @@ void Adafruit_SPIDevice::endTransaction(void) {
 }
 
 /*!
+ *    @brief  Assert/Deassert the CS pin if it is defined
+ *    @param  value The state the CS is set to
+ */
+void Adafruit_SPIDevice::setChipSelect(int value) {
+  if (_cs != -1) {
+    digitalWrite(_cs, value);
+  }
+}
+
+/*!
  *    @brief  Write a buffer or two to the SPI device, with transaction
  * management.
  *    @brief  Manually begin a transaction (calls beginTransaction if hardware
@@ -508,16 +518,6 @@ bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
   }
 
   return true;
-}
-
-/*!
- *    @brief  Assert/Deassert the CS pin if it is defined
- *    @param  value The state the CS is set to
- */
-void Adafruit_SPIDevice::setChipSelect(int value) {
-  if (_cs == -1)
-    return;
-  digitalWrite(_cs, value);
 }
 
 #endif // SPI exists
