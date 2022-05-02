@@ -326,11 +326,8 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
+  beginTransactionWithAssertingCS();
 
-  setChipSelect(LOW);
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -350,11 +347,7 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
       transfer(buffer[i]);
     }
   }
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
@@ -391,17 +384,10 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
  */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   memset(buffer, sendvalue, len); // clear out existing buffer
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
 
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   transfer(buffer, len);
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
@@ -435,11 +421,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   // do the writing
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
@@ -485,11 +467,7 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   DEBUG_SERIAL.println();
 #endif
 
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
   return true;
 }
@@ -505,17 +483,9 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
  * writes
  */
 bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-
-  setChipSelect(LOW);
+  beginTransactionWithAssertingCS();
   transfer(buffer, len);
-  setChipSelect(HIGH);
-
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  endTransactionWithDeassertingCS();
 
   return true;
 }
