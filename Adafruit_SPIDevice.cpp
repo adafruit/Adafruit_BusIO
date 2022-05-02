@@ -324,34 +324,21 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS(void) {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
+  // without a prefix_buffer to send, take the fast way and call write_and_read
+  // directly
+  if (prefix_buffer == nullptr) {
+    write_and_read(const_cast<uint8_t *>(buffer), len);
+  } else {
+    beginTransactionWithAssertingCS();
 
-  setChipSelect(LOW);
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (prefix_len > 0) {
-      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
+    if (prefix_len) {
+      transfer(const_cast<uint8_t *>(prefix_buffer), prefix_len);
     }
-    if (len > 0) {
-      _spi->transferBytes(buffer, nullptr, len);
+    if (len) {
+      transfer(const_cast<uint8_t *>(buffer), len);
     }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < prefix_len; i++) {
-      transfer(prefix_buffer[i]);
-    }
-    for (size_t i = 0; i < len; i++) {
-      transfer(buffer[i]);
-    }
-  }
-  setChipSelect(HIGH);
 
-  if (_spi) {
-    _spi->endTransaction();
+    endTransactionWithDeassertingCS();
   }
 
 #ifdef DEBUG_SERIAL
