@@ -88,6 +88,8 @@ public:
   void transfer(uint8_t *buffer, size_t len);
   void beginTransaction(void);
   void endTransaction(void);
+  void beginTransactionWithAssertingCS();
+  void endTransactionWithDeassertingCS();
 
 private:
   SPIClass *_spi;

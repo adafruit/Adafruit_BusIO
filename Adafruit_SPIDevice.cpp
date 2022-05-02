@@ -285,6 +285,26 @@ void Adafruit_SPIDevice::endTransaction(void) {
 /*!
  *    @brief  Write a buffer or two to the SPI device, with transaction
  * management.
+ *    @brief  Manually begin a transaction (calls beginTransaction if hardware
+ *            SPI) with asserting the CS pin
+ */
+void Adafruit_SPIDevice::beginTransactionWithAssertingCS() {
+  beginTransaction();
+  setChipSelect(LOW);
+}
+
+/*!
+ *    @brief  Manually end a transaction (calls endTransaction if hardware SPI)
+ *            with deasserting the CS pin
+ */
+void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
+  setChipSelect(HIGH);
+  endTransaction();
+}
+
+/*!
+ *    @brief  Write a buffer or two to the SPI device, with transaction
+ * management.
  *    @param  buffer Pointer to buffer of data to write
  *    @param  len Number of bytes from buffer to write
  *    @param  prefix_buffer Pointer to optional array of data to write before
