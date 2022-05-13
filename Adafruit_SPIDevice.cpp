@@ -20,7 +20,6 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
   _cs = cspin;
   _sck = _mosi = _miso = -1;
   _spi = theSPI;
-  _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
   _freq = freq;
   _dataOrder = dataOrder;
@@ -67,7 +66,6 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   _freq = freq;
   _dataOrder = dataOrder;
   _dataMode = dataMode;
-  _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
   _spi = nullptr;
 }
@@ -109,7 +107,6 @@ bool Adafruit_SPIDevice::begin(void) {
     }
   }
 
-  _begun = true;
   return true;
 }
 
