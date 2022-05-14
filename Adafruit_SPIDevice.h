@@ -109,6 +109,7 @@ private:
   uint32_t _freq;
   BusIOBitOrder _dataOrder;
   uint8_t _dataMode;
+
   void setChipSelect(int value);
 
   int8_t _cs, _sck, _mosi, _miso;
@@ -116,7 +117,63 @@ private:
   BusIO_PortReg *mosiPort, *clkPort, *misoPort, *csPort;
   BusIO_PortMask mosiPinMask, misoPinMask, clkPinMask, csPinMask;
 #endif
+
+  //! constant for the buffer size for the chunked transfer
+  static constexpr size_t maxBufferSizeForChunkedTransfer =
+#ifdef __AVR__
+      32;
+#else
+      64;
+#endif
   bool _begun;
+
+protected:
+  /*!
+   *    @brief  Template to encypsulate a C-array, provides STL-style accessors
+   * analoguous to std::array<>
+   *    @param  Type the type of the array
+   *    @param  Size the size of the array
+   */
+  template <typename Type, size_t Size> class Array {
+  public:
+    /*! @brief returns a pointer the start of the buffer
+     * @returns a pointer the start of the buffer
+     */
+    Type *begin() { return buffer; }
+
+    /*! @brief returns a pointer the one increment beyond the end of the buffer
+     * @returns a pointer the one increment beyond the end of the buffer
+     */
+    Type *end() { return endPointer; }
+
+    /*! @brief returns the size of the buffer
+     * @returns the size of the buffer
+     */
+    constexpr size_t size() { return Size; }
+
+    /*! @brief returns the buffer
+     * @returns the buffer
+     */
+    Type *data() { return buffer; }
+
+    /*! @brief returns a reference to the element at @param i
+     * @param i the index
+     * @returns a reference to the element at @param i
+     */
+    Type &operator[](size_t i) { return buffer[i]; }
+
+    /*! @brief returns a reference to the element at @param i
+     * @param i the index
+     * @returns a reference to the element at @param i
+     */
+    const Type &operator[](size_t i) const { return buffer[i]; }
+
+  private:
+    //! the buffer
+    Type buffer[Size];
+    //! address buffer one increment after the end
+    Type *endPointer = buffer + Size;
+  };
 };
 
 #endif // has SPI defined

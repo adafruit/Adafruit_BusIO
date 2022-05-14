@@ -7,13 +7,9 @@
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
-//! constant for the buffer size for the chunked transfer
-constexpr size_t maxBufferSizeForChunkedTransfer = 64;
-
 //#define DEBUG_SERIAL Serial
 
 #ifdef DEBUG_SERIAL
-#if !defined(__AVR__)
 template <typename T>
 static void printChunk(const char *title, const T &buffer, const uint8_t size,
                        const uint16_t chunkNumber) {
@@ -32,7 +28,6 @@ static void printChunk(const char *title, const T &buffer, const uint8_t size,
   }
   DEBUG_SERIAL.println();
 }
-#endif
 
 static void printBuffer(const char *title, const uint8_t *buffer,
                         const size_t len) {
@@ -370,8 +365,7 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
-#if !defined(__AVR__)
-  std::array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
+  Array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
@@ -421,26 +415,6 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
 
   endTransactionWithDeassertingCS();
 
-#else // !defined(__AVR__)
-
-  beginTransactionWithAssertingCS();
-
-  for (size_t i = 0; i < prefix_len; i++) {
-    transfer(prefix_buffer[i]);
-  }
-  for (size_t i = 0; i < len; i++) {
-    transfer(buffer[i]);
-  }
-
-  endTransactionWithDeassertingCS();
-
-#ifdef DEBUG_SERIAL
-  printBuffer("write() prefix_buffer", prefix_buffer, prefix_len);
-  printBuffer("write() buffer", buffer, len);
-#endif
-
-#endif // !defined(__AVR__)
-
   return true;
 }
 
@@ -484,8 +458,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
-#if !defined(__AVR__)
-  std::array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
+  Array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
@@ -569,27 +542,6 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
   }
 
   endTransactionWithDeassertingCS();
-
-#else // !defined(__AVR__)
-
-  beginTransactionWithAssertingCS();
-
-  for (size_t i = 0; i < write_len; i++) {
-    transfer(write_buffer[i]);
-  }
-
-  for (size_t i = 0; i < read_len; i++) {
-    read_buffer[i] = transfer(sendvalue);
-  }
-
-  endTransactionWithDeassertingCS();
-
-#ifdef DEBUG_SERIAL
-  printBuffer("write_then_read() write_buffer", write_buffer, write_len);
-  printBuffer("write_then_read() read_buffer", read_buffer, read_len);
-#endif
-
-#endif // !defined(__AVR__)
 
   return true;
 }
