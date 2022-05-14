@@ -4,6 +4,7 @@
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
 // #define DEBUG_SERIAL Serial
+// #define DEBUG_VERBOSE
 
 #ifdef DEBUG_SERIAL
 template <typename T>
@@ -12,6 +13,7 @@ static void printChunk(const char *title, const T &buffer, const uint8_t size) {
   DEBUG_SERIAL.print(title);
   DEBUG_SERIAL.print(F(" Chunk, size "));
   DEBUG_SERIAL.println(size);
+#ifdef DEBUG_VERBOSE
   DEBUG_SERIAL.print(F("\t"));
 
   for (uint8_t i = 0; i < size; ++i) {
@@ -20,12 +22,14 @@ static void printChunk(const char *title, const T &buffer, const uint8_t size) {
     DEBUG_SERIAL.print(F(", "));
   }
   DEBUG_SERIAL.println();
+#endif
 }
 
 static void printBuffer(const char *title, const uint8_t *buffer,
                         const size_t len) {
   DEBUG_SERIAL.print(F("\t"));
   DEBUG_SERIAL.println(title);
+#ifdef DEBUG_VERBOSE
   for (size_t i = 0; i < len; i++) {
     DEBUG_SERIAL.print(F("0x"));
     DEBUG_SERIAL.print(buffer[i], HEX);
@@ -35,6 +39,7 @@ static void printBuffer(const char *title, const uint8_t *buffer,
     }
   }
   DEBUG_SERIAL.println();
+#endif
 }
 #endif
 
