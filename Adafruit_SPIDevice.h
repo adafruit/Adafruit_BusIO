@@ -103,30 +103,6 @@ public:
   void beginTransactionWithAssertingCS();
   void endTransactionWithDeassertingCS();
 
-private:
-  SPIClass *_spi;
-  SPISettings *_spiSetting;
-  uint32_t _freq;
-  BusIOBitOrder _dataOrder;
-  uint8_t _dataMode;
-
-  void setChipSelect(int value);
-
-  int8_t _cs, _sck, _mosi, _miso;
-#ifdef BUSIO_USE_FAST_PINIO
-  BusIO_PortReg *mosiPort, *clkPort, *misoPort, *csPort;
-  BusIO_PortMask mosiPinMask, misoPinMask, clkPinMask, csPinMask;
-#endif
-
-  //! constant for the buffer size for the chunked transfer
-  static constexpr size_t maxBufferSizeForChunkedTransfer =
-#ifdef __AVR__
-      32;
-#else
-      64;
-#endif
-  bool _begun;
-
 protected:
   /*!
    *    @brief  Template to encypsulate a C-array, provides STL-style accessors
@@ -136,15 +112,18 @@ protected:
    */
   template <typename Type, size_t Size> class Array {
   public:
+    //! Iterator type
+    using Iterator = Type *;
+
     /*! @brief returns a pointer the start of the buffer
      * @returns a pointer the start of the buffer
      */
-    Type *begin() { return buffer; }
+    Iterator begin() { return buffer; }
 
     /*! @brief returns a pointer the one increment beyond the end of the buffer
      * @returns a pointer the one increment beyond the end of the buffer
      */
-    Type *end() { return endPointer; }
+    Iterator end() { return endPointer; }
 
     /*! @brief returns the size of the buffer
      * @returns the size of the buffer
@@ -172,8 +151,45 @@ protected:
     //! the buffer
     Type buffer[Size];
     //! address buffer one increment after the end
-    Type *endPointer = buffer + Size;
+    Iterator endPointer = buffer + Size;
   };
+
+private:
+  //! constant for the buffer size for the chunked transfer
+  static constexpr size_t maxBufferSizeForChunkedTransfer =
+#ifdef __AVR__
+      32;
+#else
+      64;
+#endif
+
+  using ChunkBuffer = Array<uint8_t, maxBufferSizeForChunkedTransfer>;
+
+  SPIClass *_spi;
+  SPISettings *_spiSetting;
+  uint32_t _freq;
+  BusIOBitOrder _dataOrder;
+  uint8_t _dataMode;
+
+  void setChipSelect(int value);
+  void transferFilledChunk(ChunkBuffer &chunkBuffer,
+                           ChunkBuffer::Iterator &iteratorToIncrement,
+                           const uint8_t *bufferToSend, const size_t bufferLen);
+  void transferPartiallyFilledChunk(
+      ChunkBuffer &chunkBuffer,
+      const ChunkBuffer::Iterator &chunkBufferIterator);
+
+  void transferAndReadChunks(ChunkBuffer &chunkBuffer,
+                             ChunkBuffer::Iterator &iteratorToIncrement,
+                             uint8_t *readBuffer, const size_t readLen,
+                             const uint8_t sendVal);
+
+  int8_t _cs, _sck, _mosi, _miso;
+#ifdef BUSIO_USE_FAST_PINIO
+  BusIO_PortReg *mosiPort, *clkPort, *misoPort, *csPort;
+  BusIO_PortMask mosiPinMask, misoPinMask, clkPinMask, csPinMask;
+#endif
+  bool _begun;
 };
 
 #endif // has SPI defined

@@ -1,23 +1,16 @@
 #include "Adafruit_SPIDevice.h"
 
-#if !defined(__AVR__)
-#include <array>
-#endif
-
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
-//#define DEBUG_SERIAL Serial
+// #define DEBUG_SERIAL Serial
 
 #ifdef DEBUG_SERIAL
 template <typename T>
-static void printChunk(const char *title, const T &buffer, const uint8_t size,
-                       const uint16_t chunkNumber) {
+static void printChunk(const char *title, const T &buffer, const uint8_t size) {
   DEBUG_SERIAL.print(F("\t"));
   DEBUG_SERIAL.print(title);
-  DEBUG_SERIAL.print(F(" Chunk #"));
-  DEBUG_SERIAL.print(chunkNumber);
-  DEBUG_SERIAL.print(F(", size "));
+  DEBUG_SERIAL.print(F(" Chunk, size "));
   DEBUG_SERIAL.println(size);
   DEBUG_SERIAL.print(F("\t"));
 
@@ -43,6 +36,20 @@ static void printBuffer(const char *title, const uint8_t *buffer,
   }
   DEBUG_SERIAL.println();
 }
+#endif
+
+// The Arduino Core of AVR defines min() as a macro. It also has no std::min, so
+// undef the macro and create std::min
+#if defined(__AVR__)
+#undef min
+namespace std {
+template <typename T> constexpr T min(const T a, const T b) {
+  return (a < b) ? a : b;
+}
+}; // namespace std
+#else
+// all other platforms have stdlib's <algorithm>, so include the real deal
+#include <algorithm>
 #endif
 
 /*!
@@ -351,6 +358,94 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
   endTransaction();
 }
 
+void Adafruit_SPIDevice::transferFilledChunk(
+    ChunkBuffer &chunkBuffer, ChunkBuffer::Iterator &iteratorToIncrement,
+    const uint8_t *bufferToSend, const size_t bufferLen) {
+  auto bytesToTransferLen = bufferLen;
+  auto bytesToTransferBuffer = bufferToSend;
+
+  while (bytesToTransferLen) {
+    auto bytesToTransferLenThisChunk = std::min(
+        bytesToTransferLen,
+        chunkBuffer.size() - (iteratorToIncrement - chunkBuffer.begin()));
+
+    memcpy(iteratorToIncrement, bytesToTransferBuffer,
+           bytesToTransferLenThisChunk);
+
+    bytesToTransferLen -= bytesToTransferLenThisChunk;
+    bytesToTransferBuffer += bytesToTransferLenThisChunk;
+
+    if (bytesToTransferLen) {
+      transfer(chunkBuffer.data(), chunkBuffer.size());
+
+      iteratorToIncrement = chunkBuffer.begin();
+
+#ifdef DEBUG_SERIAL
+      printChunk("transferFilledChunk()", chunkBuffer, chunkBuffer.size());
+#endif
+    } else {
+      iteratorToIncrement = iteratorToIncrement + bytesToTransferLenThisChunk;
+    }
+  }
+}
+
+void Adafruit_SPIDevice::transferPartiallyFilledChunk(
+    ChunkBuffer &chunkBuffer,
+    const ChunkBuffer::Iterator &chunkBufferIterator) {
+  if (chunkBufferIterator != chunkBuffer.begin()) {
+    auto bytesToTransferLenThisChunk =
+        chunkBufferIterator - chunkBuffer.begin();
+
+    transfer(chunkBuffer.data(), bytesToTransferLenThisChunk);
+
+#ifdef DEBUG_SERIAL
+    printChunk("transferPartiallyFilledChunk()", chunkBuffer,
+               bytesToTransferLenThisChunk);
+#endif
+  }
+}
+
+void Adafruit_SPIDevice::transferAndReadChunks(
+    ChunkBuffer &chunkBuffer, ChunkBuffer::Iterator &iteratorToIncrement,
+    uint8_t *readBuffer, const size_t readLen, const uint8_t sendVal) {
+  auto bytesToTransferLen = readLen;
+  auto readFromIterator = iteratorToIncrement;
+
+  while (bytesToTransferLen) {
+    auto bytesToTransferLenThisChunk = std::min(
+        bytesToTransferLen,
+        chunkBuffer.size() - (iteratorToIncrement - chunkBuffer.begin()));
+
+    memset(iteratorToIncrement, sendVal, bytesToTransferLenThisChunk);
+
+    iteratorToIncrement += bytesToTransferLenThisChunk;
+    bytesToTransferLen -= bytesToTransferLenThisChunk;
+
+    {
+      auto tranferLen = iteratorToIncrement - chunkBuffer.begin();
+#if defined(DEBUG_SERIAL) && defined(DEBUG_VERBOSE)
+      printChunk("transferAndReadChunks() before transmit", chunkBuffer,
+                 tranferLen);
+#endif
+      transfer(chunkBuffer.data(), tranferLen);
+#ifdef DEBUG_SERIAL
+      printChunk("transferAndReadChunks() after transmit", chunkBuffer,
+                 tranferLen);
+#endif
+    }
+
+    memcpy(readBuffer, readFromIterator, bytesToTransferLenThisChunk);
+
+    readBuffer += bytesToTransferLenThisChunk;
+
+    readFromIterator = iteratorToIncrement = chunkBuffer.begin();
+
+    if (!bytesToTransferLen) {
+      break;
+    }
+  }
+}
+
 /*!
  *    @brief  Write a buffer or two to the SPI device, with transaction
  * management.
@@ -369,49 +464,12 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
-#ifdef DEBUG_SERIAL
-  uint8_t chunkNumber = 1;
-#endif
-
   beginTransactionWithAssertingCS();
 
-  for (size_t i = 0; i < prefix_len; ++i) {
-    *chunkBufferIterator++ = prefix_buffer[i];
-
-    if (chunkBufferIterator == chunkBuffer.end()) {
-      transfer(chunkBuffer.data(), maxBufferSizeForChunkedTransfer);
-      chunkBufferIterator = chunkBuffer.begin();
-
-#ifdef DEBUG_SERIAL
-      printChunk("write() Wrote", chunkBuffer, maxBufferSizeForChunkedTransfer,
-                 chunkNumber++);
-#endif
-    }
-  }
-
-  for (size_t i = 0; i < len; ++i) {
-    *chunkBufferIterator++ = buffer[i];
-
-    if (chunkBufferIterator == chunkBuffer.end()) {
-      transfer(chunkBuffer.data(), maxBufferSizeForChunkedTransfer);
-      chunkBufferIterator = chunkBuffer.begin();
-
-#ifdef DEBUG_SERIAL
-      printChunk("write() Wrote", chunkBuffer, maxBufferSizeForChunkedTransfer,
-                 chunkNumber++);
-#endif
-    }
-  }
-
-  if (chunkBufferIterator != chunkBuffer.begin()) {
-    auto numberByteToTransfer = chunkBufferIterator - chunkBuffer.begin();
-    transfer(chunkBuffer.data(), numberByteToTransfer);
-
-#ifdef DEBUG_SERIAL
-    printChunk("write() Wrote remaining", chunkBuffer, numberByteToTransfer,
-               chunkNumber++);
-#endif
-  }
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, prefix_buffer,
+                      prefix_len);
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, buffer, len);
+  transferPartiallyFilledChunk(chunkBuffer, chunkBufferIterator);
 
   endTransactionWithDeassertingCS();
 
@@ -462,84 +520,12 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
-#ifdef DEBUG_SERIAL
-  uint8_t chunkNumber = 1;
-#endif
-
   beginTransactionWithAssertingCS();
 
-  for (size_t i = 0; i < write_len; ++i) {
-    *chunkBufferIterator++ = write_buffer[i];
-
-    if (chunkBufferIterator == chunkBuffer.end()) {
-      transfer(chunkBuffer.data(), maxBufferSizeForChunkedTransfer);
-      chunkBufferIterator = chunkBuffer.begin();
-
-#ifdef DEBUG_SERIAL
-      printChunk("write_then_read() Wrote", chunkBuffer,
-                 maxBufferSizeForChunkedTransfer, chunkNumber++);
-#endif
-    }
-  }
-
-  auto readBufferIterator = read_buffer;
-  auto readFromIterator = chunkBufferIterator;
-  size_t readBufferLen = read_len;
-
-  for (size_t i = 0; i < read_len; ++i) {
-    *chunkBufferIterator++ = sendvalue;
-
-    if (chunkBufferIterator == chunkBuffer.end()) {
-#ifdef DEBUG_SERIAL
-      printChunk("write_then_read() before transmit", chunkBuffer,
-                 maxBufferSizeForChunkedTransfer, chunkNumber);
-#endif
-
-      transfer(chunkBuffer.data(), maxBufferSizeForChunkedTransfer);
-
-      while (readBufferLen) {
-        if (readFromIterator != chunkBuffer.end()) {
-          *readBufferIterator++ = *readFromIterator++;
-          --readBufferLen;
-        } else {
-          break;
-        }
-      }
-
-#ifdef DEBUG_SERIAL
-      printChunk("write_then_read() after transmit", chunkBuffer,
-                 maxBufferSizeForChunkedTransfer, chunkNumber++);
-#endif
-
-      chunkBufferIterator = chunkBuffer.begin();
-      readFromIterator = chunkBuffer.begin();
-    }
-  }
-
-  if (chunkBufferIterator != chunkBuffer.begin()) {
-    auto numberByteToTransfer = chunkBufferIterator - chunkBuffer.begin();
-
-#ifdef DEBUG_SERIAL
-    printChunk("write_then_read() before transmit remaining", chunkBuffer,
-               numberByteToTransfer, chunkNumber);
-#endif
-
-    transfer(chunkBuffer.data(), numberByteToTransfer);
-
-#ifdef DEBUG_SERIAL
-    printChunk("write_then_read() after transmit remaining", chunkBuffer,
-               numberByteToTransfer, chunkNumber);
-#endif
-
-    while (readBufferLen) {
-      if (readFromIterator != chunkBuffer.end()) {
-        *readBufferIterator++ = *readFromIterator++;
-        --readBufferLen;
-      } else {
-        break;
-      }
-    }
-  }
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, write_buffer,
+                      write_len);
+  transferAndReadChunks(chunkBuffer, chunkBufferIterator, read_buffer, read_len,
+                        sendvalue);
 
   endTransactionWithDeassertingCS();
 
