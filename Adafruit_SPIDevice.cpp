@@ -444,10 +444,6 @@ void Adafruit_SPIDevice::transferAndReadChunks(
     readBuffer += bytesToTransferLenThisChunk;
 
     readFromIterator = iteratorToIncrement = chunkBuffer.begin();
-
-    if (!bytesToTransferLen) {
-      break;
-    }
   }
 }
 
