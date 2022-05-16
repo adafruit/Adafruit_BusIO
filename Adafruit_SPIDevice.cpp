@@ -461,7 +461,7 @@ void Adafruit_SPIDevice::transferAndReadChunks(
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
-  Array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
+  ChunkBuffer chunkBuffer;
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
@@ -517,7 +517,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
-  Array<uint8_t, maxBufferSizeForChunkedTransfer> chunkBuffer;
+  ChunkBuffer chunkBuffer;
 
   auto chunkBufferIterator = chunkBuffer.begin();
 
