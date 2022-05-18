@@ -103,67 +103,17 @@ public:
   void beginTransactionWithAssertingCS();
   void endTransactionWithDeassertingCS();
 
-protected:
-  /*!
-   *    @brief  Template to encypsulate a C-array, provides STL-style accessors
-   * analoguous to std::array<>
-   *    @param  Type the type of the array
-   *    @param  Size the size of the array
-   */
-  template <typename Type, size_t Size> class Array {
-  public:
-    //! Iterator type
-    using Iterator = Type *;
-
-    /*! @brief returns a pointer the start of the buffer
-     * @returns a pointer the start of the buffer
-     */
-    Iterator begin() { return buffer; }
-
-    /*! @brief returns a pointer the one increment beyond the end of the buffer
-     * @returns a pointer the one increment beyond the end of the buffer
-     */
-    Iterator end() { return endPointer; }
-
-    /*! @brief returns the size of the buffer
-     * @returns the size of the buffer
-     */
-    constexpr size_t size() { return Size; }
-
-    /*! @brief returns the buffer
-     * @returns the buffer
-     */
-    Type *data() { return buffer; }
-
-    /*! @brief returns a reference to the element at @param i
-     * @param i the index
-     * @returns a reference to the element at @param i
-     */
-    Type &operator[](size_t i) { return buffer[i]; }
-
-    /*! @brief returns a reference to the element at @param i
-     * @param i the index
-     * @returns a reference to the element at @param i
-     */
-    const Type &operator[](size_t i) const { return buffer[i]; }
-
-  private:
-    //! the buffer
-    Type buffer[Size];
-    //! address buffer one increment after the end
-    Iterator endPointer = buffer + Size;
-  };
-
 private:
   //! constant for the buffer size for the chunked transfer
-  static constexpr size_t maxBufferSizeForChunkedTransfer =
+  static constexpr size_t ChunkBufferSize =
 #ifdef __AVR__
       32;
 #else
       64;
 #endif
 
-  using ChunkBuffer = Array<uint8_t, maxBufferSizeForChunkedTransfer>;
+  using ChunkBuffer = uint8_t[ChunkBufferSize];
+  using ChunkBufferIterator = uint8_t *;
 
   SPIClass *_spi;
   SPISettings *_spiSetting;
@@ -173,14 +123,14 @@ private:
 
   void setChipSelect(int value);
   void transferFilledChunk(ChunkBuffer &chunkBuffer,
-                           ChunkBuffer::Iterator &iteratorToIncrement,
+                           ChunkBufferIterator &iteratorToIncrement,
                            const uint8_t *bufferToSend, const size_t bufferLen);
-  void transferPartiallyFilledChunk(
-      ChunkBuffer &chunkBuffer,
-      const ChunkBuffer::Iterator &chunkBufferIterator);
+  void
+  transferPartiallyFilledChunk(ChunkBuffer &chunkBuffer,
+                               const ChunkBufferIterator &chunkBufferIterator);
 
   void transferAndReadChunks(ChunkBuffer &chunkBuffer,
-                             ChunkBuffer::Iterator &iteratorToIncrement,
+                             ChunkBufferIterator &iteratorToIncrement,
                              uint8_t *readBuffer, const size_t readLen,
                              const uint8_t sendVal);
 

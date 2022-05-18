@@ -364,15 +364,15 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
 }
 
 void Adafruit_SPIDevice::transferFilledChunk(
-    ChunkBuffer &chunkBuffer, ChunkBuffer::Iterator &iteratorToIncrement,
+    ChunkBuffer &chunkBuffer, ChunkBufferIterator &iteratorToIncrement,
     const uint8_t *bufferToSend, const size_t bufferLen) {
   auto bytesToTransferLen = bufferLen;
   auto bytesToTransferBuffer = bufferToSend;
 
   while (bytesToTransferLen) {
-    auto bytesToTransferLenThisChunk = std::min(
-        bytesToTransferLen,
-        chunkBuffer.size() - (iteratorToIncrement - chunkBuffer.begin()));
+    auto bytesToTransferLenThisChunk =
+        std::min(bytesToTransferLen,
+                 ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
 
     memcpy(iteratorToIncrement, bytesToTransferBuffer,
            bytesToTransferLenThisChunk);
@@ -381,12 +381,12 @@ void Adafruit_SPIDevice::transferFilledChunk(
     bytesToTransferBuffer += bytesToTransferLenThisChunk;
 
     if (bytesToTransferLen) {
-      transfer(chunkBuffer.data(), chunkBuffer.size());
+      transfer(chunkBuffer, ChunkBufferSize);
 
-      iteratorToIncrement = chunkBuffer.begin();
+      iteratorToIncrement = chunkBuffer;
 
 #ifdef DEBUG_SERIAL
-      printChunk("transferFilledChunk()", chunkBuffer, chunkBuffer.size());
+      printChunk("transferFilledChunk()", chunkBuffer, ChunkBufferSize);
 #endif
     } else {
       iteratorToIncrement = iteratorToIncrement + bytesToTransferLenThisChunk;
@@ -395,13 +395,11 @@ void Adafruit_SPIDevice::transferFilledChunk(
 }
 
 void Adafruit_SPIDevice::transferPartiallyFilledChunk(
-    ChunkBuffer &chunkBuffer,
-    const ChunkBuffer::Iterator &chunkBufferIterator) {
-  if (chunkBufferIterator != chunkBuffer.begin()) {
-    auto bytesToTransferLenThisChunk =
-        chunkBufferIterator - chunkBuffer.begin();
+    ChunkBuffer &chunkBuffer, const ChunkBufferIterator &chunkBufferIterator) {
+  if (chunkBufferIterator != chunkBuffer) {
+    auto bytesToTransferLenThisChunk = chunkBufferIterator - chunkBuffer;
 
-    transfer(chunkBuffer.data(), bytesToTransferLenThisChunk);
+    transfer(chunkBuffer, bytesToTransferLenThisChunk);
 
 #ifdef DEBUG_SERIAL
     printChunk("transferPartiallyFilledChunk()", chunkBuffer,
@@ -411,15 +409,15 @@ void Adafruit_SPIDevice::transferPartiallyFilledChunk(
 }
 
 void Adafruit_SPIDevice::transferAndReadChunks(
-    ChunkBuffer &chunkBuffer, ChunkBuffer::Iterator &iteratorToIncrement,
+    ChunkBuffer &chunkBuffer, ChunkBufferIterator &iteratorToIncrement,
     uint8_t *readBuffer, const size_t readLen, const uint8_t sendVal) {
   auto bytesToTransferLen = readLen;
   auto readFromIterator = iteratorToIncrement;
 
   while (bytesToTransferLen) {
-    auto bytesToTransferLenThisChunk = std::min(
-        bytesToTransferLen,
-        chunkBuffer.size() - (iteratorToIncrement - chunkBuffer.begin()));
+    auto bytesToTransferLenThisChunk =
+        std::min(bytesToTransferLen,
+                 ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
 
     memset(iteratorToIncrement, sendVal, bytesToTransferLenThisChunk);
 
@@ -427,12 +425,12 @@ void Adafruit_SPIDevice::transferAndReadChunks(
     bytesToTransferLen -= bytesToTransferLenThisChunk;
 
     {
-      auto tranferLen = iteratorToIncrement - chunkBuffer.begin();
+      auto tranferLen = iteratorToIncrement - chunkBuffer;
 #if defined(DEBUG_SERIAL) && defined(DEBUG_VERBOSE)
       printChunk("transferAndReadChunks() before transmit", chunkBuffer,
                  tranferLen);
 #endif
-      transfer(chunkBuffer.data(), tranferLen);
+      transfer(chunkBuffer, tranferLen);
 #ifdef DEBUG_SERIAL
       printChunk("transferAndReadChunks() after transmit", chunkBuffer,
                  tranferLen);
@@ -443,7 +441,7 @@ void Adafruit_SPIDevice::transferAndReadChunks(
 
     readBuffer += bytesToTransferLenThisChunk;
 
-    readFromIterator = iteratorToIncrement = chunkBuffer.begin();
+    readFromIterator = iteratorToIncrement = chunkBuffer;
   }
 }
 
@@ -462,8 +460,7 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
   ChunkBuffer chunkBuffer;
-
-  auto chunkBufferIterator = chunkBuffer.begin();
+  ChunkBufferIterator chunkBufferIterator = chunkBuffer;
 
   beginTransactionWithAssertingCS();
 
@@ -518,8 +515,7 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
   ChunkBuffer chunkBuffer;
-
-  auto chunkBufferIterator = chunkBuffer.begin();
+  ChunkBufferIterator chunkBufferIterator = chunkBuffer;
 
   beginTransactionWithAssertingCS();
 
