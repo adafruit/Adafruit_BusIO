@@ -43,19 +43,15 @@ static void printBuffer(const char *title, const uint8_t *buffer,
 }
 #endif
 
-// The Arduino Core of AVR defines min() as a macro. It also has no std::min, so
-// undef the macro and create std::min
-#if defined(__AVR__)
-#undef min
-namespace std {
-template <typename T> constexpr T min(const T a, const T b) {
+/*!
+ *    @brief  returns the smaller of both arguments
+ *    @param  a argument 1
+ *    @param  b argument 2
+ *    @return the smaller of both arguments
+ */
+template <typename T> constexpr T minimum(const T a, const T b) {
   return (a < b) ? a : b;
 }
-}; // namespace std
-#else
-// all other platforms have stdlib's <algorithm>, so include the real deal
-#include <algorithm>
-#endif
 
 /*!
  *    @brief  Create an SPI device with the given CS pin and settings
@@ -371,8 +367,8 @@ void Adafruit_SPIDevice::transferFilledChunk(
 
   while (bytesToTransferLen) {
     auto bytesToTransferLenThisChunk =
-        std::min(bytesToTransferLen,
-                 ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
+        minimum(bytesToTransferLen,
+                ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
 
     memcpy(iteratorToIncrement, bytesToTransferBuffer,
            bytesToTransferLenThisChunk);
@@ -416,8 +412,8 @@ void Adafruit_SPIDevice::transferAndReadChunks(
 
   while (bytesToTransferLen) {
     auto bytesToTransferLenThisChunk =
-        std::min(bytesToTransferLen,
-                 ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
+        minimum(bytesToTransferLen,
+                ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
 
     memset(iteratorToIncrement, sendVal, bytesToTransferLenThisChunk);
 
