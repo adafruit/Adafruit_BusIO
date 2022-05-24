@@ -7,8 +7,8 @@
 // #define DEBUG_VERBOSE
 
 #ifdef DEBUG_SERIAL
-template <typename T>
-static void printChunk(const char *title, const T &buffer, const uint8_t size) {
+static void printChunk(const char *title, const uint8_t *buffer,
+                       const uint8_t size) {
   DEBUG_SERIAL.print(F("\t"));
   DEBUG_SERIAL.print(title);
   DEBUG_SERIAL.print(F(" Chunk, size "));
