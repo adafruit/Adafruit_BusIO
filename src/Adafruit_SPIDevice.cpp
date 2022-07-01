@@ -134,16 +134,13 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // hardware SPI is easy
 
 #if defined(SPARK)
-    <<<<<<< HEAD:src/Adafruit_SPIDevice.cpp _spi->transfer(buffer, buffer, len, NULL);
-=======
     _spi->transfer(buffer, buffer, len, nullptr);
->>>>>>> c4213261313ffac776fd5067cc9e1ece2bb02e47:Adafruit_SPIDevice.cpp
 #elif defined(STM32)
-for (size_t i = 0; i < len; i++) {
-  _spi->transfer(buffer[i]);
-}
+    for (size_t i = 0; i < len; i++) {
+      _spi->transfer(buffer[i]);
+    }
 #else
-_spi->transfer(buffer, len);
+    _spi->transfer(buffer, len);
 #endif
     return;
   }
@@ -187,7 +184,7 @@ _spi->transfer(buffer, len);
           else
             *mosiPort &= ~mosiPinMask;
 #else
-        digitalWrite(_mosi, towrite);
+          digitalWrite(_mosi, towrite);
 #endif
           lastmosi = towrite;
         }
@@ -195,7 +192,7 @@ _spi->transfer(buffer, len);
 #ifdef BUSIO_USE_FAST_PINIO
         *clkPort |= clkPinMask; // Clock high
 #else
-      digitalWrite(_sck, HIGH);
+        digitalWrite(_sck, HIGH);
 #endif
 
         if (bitdelay_us) {
@@ -206,7 +203,7 @@ _spi->transfer(buffer, len);
 #ifdef BUSIO_USE_FAST_PINIO
           if (*misoPort & misoPinMask) {
 #else
-        if (digitalRead(_miso)) {
+          if (digitalRead(_miso)) {
 #endif
             reply |= b;
           }
@@ -215,14 +212,14 @@ _spi->transfer(buffer, len);
 #ifdef BUSIO_USE_FAST_PINIO
         *clkPort &= ~clkPinMask; // Clock low
 #else
-      digitalWrite(_sck, LOW);
+        digitalWrite(_sck, LOW);
 #endif
       } else { // if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3)
 
 #ifdef BUSIO_USE_FAST_PINIO
         *clkPort |= clkPinMask; // Clock high
 #else
-      digitalWrite(_sck, HIGH);
+        digitalWrite(_sck, HIGH);
 #endif
 
         if (bitdelay_us) {
@@ -236,21 +233,21 @@ _spi->transfer(buffer, len);
           else
             *mosiPort &= ~mosiPinMask;
 #else
-        digitalWrite(_mosi, send & b);
+          digitalWrite(_mosi, send & b);
 #endif
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
         *clkPort &= ~clkPinMask; // Clock low
 #else
-      digitalWrite(_sck, LOW);
+        digitalWrite(_sck, LOW);
 #endif
 
         if (_miso != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
           if (*misoPort & misoPinMask) {
 #else
-        if (digitalRead(_miso)) {
+          if (digitalRead(_miso)) {
 #endif
             reply |= b;
           }
