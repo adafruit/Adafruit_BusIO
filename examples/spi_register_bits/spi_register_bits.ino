@@ -139,7 +139,7 @@ void setup() {
 
 void loop() {
   #if (defined( MAX31865_READY_PIN ) && (MAX31865_1_READY_PIN != -1))
-    // Is converstion ready?
+    // Is conversion ready?
     if (!digitalRead(MAX31865_READY_PIN))
   #else
     // Warant conversion is ready.
