@@ -280,13 +280,16 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
     TWSR = 0x3;
   }
 #ifdef DEBUG_SERIAL
-  Serial.print(F("TWSR prescaler = ")); Serial.println(prescaler);
-  Serial.print(F("TWBR = ")); Serial.println(atwbr);
+  Serial.print(F("TWSR prescaler = "));
+  Serial.println(prescaler);
+  Serial.print(F("TWBR = "));
+  Serial.println(atwbr);
 #endif
   TWBR = atwbr;
   return true;
 
-#elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) && !defined(TinyWireM_h)
+#elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) &&                   \
+    !defined(TinyWireM_h)
   _wire->setClock(desiredclk);
   return true;
 
