@@ -259,9 +259,40 @@ uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
  *    Not necessarily that the speed was achieved!
  */
 bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
-#if (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) && !defined(TinyWireM_h)
+#if defined(__AVR__) // fix arduino core set clock
+  // calculate TWBR correctly
+  uint8_t prescaler = 1;
+  uint32_t atwbr = ((F_CPU / desiredclk) - 16) / 2;
+  if (atwbr <= 255) {
+    prescaler = 1;
+    TWSR = 0x0;
+  } else if (atwbr <= 1020) {
+    atwbr /= 4;
+    prescaler = 4;
+    TWSR = 0x1;
+  } else if (atwbr <= 4080) {
+    atwbr /= 16;
+    prescaler = 16;
+    TWSR = 0x2;
+  } else if (atwbr <= 16320) {
+    atwbr /= 64;
+    prescaler = 64;
+    TWSR = 0x3;
+  }
+#ifdef DEBUG_SERIAL
+  Serial.print(F("TWSR prescaler = "));
+  Serial.println(prescaler);
+  Serial.print(F("TWBR = "));
+  Serial.println(atwbr);
+#endif
+  TWBR = atwbr;
+  return true;
+
+#elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) &&                   \
+    !defined(TinyWireM_h)
   _wire->setClock(desiredclk);
   return true;
+
 #else
   (void)desiredclk;
   return false;
