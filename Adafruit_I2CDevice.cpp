@@ -189,8 +189,8 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
 bool Adafruit_I2CDevice::_read(uint8_t *buffer, size_t len, bool stop) {
 #if defined(TinyWireM_h)
   size_t recv = _wire->requestFrom((uint8_t)_addr, (uint8_t)len);
-#elif defined(ARDUINO_ARCH_MEGAAVR)  
-   size_t recv = _wire->requestFrom(_addr, len, stop);
+#elif defined(ARDUINO_ARCH_MEGAAVR)
+  size_t recv = _wire->requestFrom(_addr, len, stop);
 #else
   size_t recv = _wire->requestFrom((uint8_t)_addr, (uint8_t)len, (uint8_t)stop);
 #endif
