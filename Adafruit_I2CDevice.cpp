@@ -261,7 +261,7 @@ uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
  *    Not necessarily that the speed was achieved!
  */
 bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
-#if defined(__AVR__) // fix arduino core set clock
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) // fix arduino core set clock
   // calculate TWBR correctly
   uint8_t prescaler = 1;
   uint32_t atwbr = ((F_CPU / desiredclk) - 16) / 2;
