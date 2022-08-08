@@ -266,19 +266,19 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
   // calculate TWBR correctly
 
   if ((F_CPU / 18) < desiredclk) {
-    #ifdef DEBUG_SERIAL
+#ifdef DEBUG_SERIAL
     Serial.println(F("I2C.setSpeed too high."));
-    #endif
+#endif
     return false;
   }
   uint32_t atwbr = ((F_CPU / desiredclk) - 16) / 2;
   if (atwbr > 16320) {
-    #ifdef DEBUG_SERIAL
+#ifdef DEBUG_SERIAL
     Serial.println(F("I2C.setSpeed too low."));
-    #endif
+#endif
     return false;
   }
-  
+
   if (atwbr <= 255) {
     atwbr /= 1;
     TWSR = 0x0;
@@ -288,7 +288,7 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
   } else if (atwbr <= 4080) {
     atwbr /= 16;
     TWSR = 0x2;
-  } else {           //  if (atwbr <= 16320)
+  } else { //  if (atwbr <= 16320)
     atwbr /= 64;
     TWSR = 0x3;
   }
