@@ -292,7 +292,7 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
     atwbr /= 64;
     TWSR = 0x3;
   }
-  TWBR = atwb;
+  TWBR = atwbr;
 
 #ifdef DEBUG_SERIAL
   Serial.print(F("TWSR prescaler = "));
