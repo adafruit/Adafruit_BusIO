@@ -264,33 +264,43 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
 #if defined(__AVR_ATmega328__) ||                                              \
     defined(__AVR_ATmega328P__) // fix arduino core set clock
   // calculate TWBR correctly
-  uint8_t prescaler = 1;
+
+  if ((F_CPU / 18) < desiredclk) {
+#ifdef DEBUG_SERIAL
+    Serial.println(F("I2C.setSpeed too high."));
+#endif
+    return false;
+  }
   uint32_t atwbr = ((F_CPU / desiredclk) - 16) / 2;
+  if (atwbr > 16320) {
+#ifdef DEBUG_SERIAL
+    Serial.println(F("I2C.setSpeed too low."));
+#endif
+    return false;
+  }
+
   if (atwbr <= 255) {
-    prescaler = 1;
+    atwbr /= 1;
     TWSR = 0x0;
   } else if (atwbr <= 1020) {
     atwbr /= 4;
-    prescaler = 4;
     TWSR = 0x1;
   } else if (atwbr <= 4080) {
     atwbr /= 16;
-    prescaler = 16;
     TWSR = 0x2;
-  } else if (atwbr <= 16320) {
+  } else { //  if (atwbr <= 16320)
     atwbr /= 64;
-    prescaler = 64;
     TWSR = 0x3;
   }
+  TWBR = atwbr;
+
 #ifdef DEBUG_SERIAL
   Serial.print(F("TWSR prescaler = "));
-  Serial.println(prescaler);
+  Serial.println(pow(4, TWSR));
   Serial.print(F("TWBR = "));
   Serial.println(atwbr);
 #endif
-  TWBR = atwbr;
   return true;
-
 #elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) &&                   \
     !defined(TinyWireM_h)
   _wire->setClock(desiredclk);
