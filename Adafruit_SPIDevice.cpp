@@ -4,6 +4,7 @@
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
 //#define DEBUG_SERIAL Serial
+// #define DEBUG_SWSERIAL
 
 /*!
  *    @brief  Create an SPI device with the given CS pin and settings
@@ -20,7 +21,6 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
   _cs = cspin;
   _sck = _mosi = _miso = -1;
   _spi = theSPI;
-  _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
   _freq = freq;
   _dataOrder = dataOrder;
@@ -67,7 +67,6 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   _freq = freq;
   _dataOrder = dataOrder;
   _dataMode = dataMode;
-  _begun = false;
   _spiSetting = new SPISettings(freq, dataOrder, dataMode);
   _spi = nullptr;
 }
@@ -109,7 +108,6 @@ bool Adafruit_SPIDevice::begin(void) {
     }
   }
 
-  _begun = true;
   return true;
 }
 
@@ -151,13 +149,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     uint8_t reply = 0;
     uint8_t send = buffer[i];
 
-    /*
+#ifdef DEBUG_SWSERIAL
     Serial.print("\tSending software SPI byte 0x");
     Serial.print(send, HEX);
     Serial.print(" -> 0x");
-    */
+#endif
 
-    // Serial.print(send, HEX);
     for (uint8_t b = startbit; b != 0;
          b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
 

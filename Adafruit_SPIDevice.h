@@ -116,7 +116,6 @@ private:
   BusIO_PortReg *mosiPort, *clkPort, *misoPort, *csPort;
   BusIO_PortMask mosiPinMask, misoPinMask, clkPinMask, csPinMask;
 #endif
-  bool _begun;
 };
 
 #endif // has SPI defined
