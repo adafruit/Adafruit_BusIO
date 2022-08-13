@@ -104,12 +104,35 @@ public:
   void endTransactionWithDeassertingCS();
 
 private:
+  //! constant for the buffer size for the chunked transfer
+  static constexpr size_t ChunkBufferSize =
+#ifdef __AVR__
+      32;
+#else
+      64;
+#endif
+
+  using ChunkBuffer = uint8_t[ChunkBufferSize];
+  using ChunkBufferIterator = uint8_t *;
+
   SPIClass *_spi;
   SPISettings *_spiSetting;
   uint32_t _freq;
   BusIOBitOrder _dataOrder;
   uint8_t _dataMode;
+
   void setChipSelect(int value);
+  void transferFilledChunk(ChunkBuffer &chunkBuffer,
+                           ChunkBufferIterator &iteratorToIncrement,
+                           const uint8_t *bufferToSend, const size_t bufferLen);
+  void
+  transferPartiallyFilledChunk(ChunkBuffer &chunkBuffer,
+                               const ChunkBufferIterator &chunkBufferIterator);
+
+  void transferAndReadChunks(ChunkBuffer &chunkBuffer,
+                             ChunkBufferIterator &iteratorToIncrement,
+                             uint8_t *readBuffer, const size_t readLen,
+                             const uint8_t sendVal);
 
   int8_t _cs, _sck, _mosi, _miso;
 #ifdef BUSIO_USE_FAST_PINIO

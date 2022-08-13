@@ -3,7 +3,55 @@
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 
-//#define DEBUG_SERIAL Serial
+// #define DEBUG_SERIAL Serial
+// #define DEBUG_VERBOSE
+
+#ifdef DEBUG_SERIAL
+static void printChunk(const char *title, const uint8_t *buffer,
+                       const uint8_t size) {
+  DEBUG_SERIAL.print(F("\t"));
+  DEBUG_SERIAL.print(title);
+  DEBUG_SERIAL.print(F(" Chunk, size "));
+  DEBUG_SERIAL.println(size);
+#ifdef DEBUG_VERBOSE
+  DEBUG_SERIAL.print(F("\t"));
+
+  for (uint8_t i = 0; i < size; ++i) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(buffer[i], HEX);
+    DEBUG_SERIAL.print(F(", "));
+  }
+  DEBUG_SERIAL.println();
+#endif
+}
+
+static void printBuffer(const char *title, const uint8_t *buffer,
+                        const size_t len) {
+  DEBUG_SERIAL.print(F("\t"));
+  DEBUG_SERIAL.println(title);
+#ifdef DEBUG_VERBOSE
+  for (size_t i = 0; i < len; i++) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(buffer[i], HEX);
+    DEBUG_SERIAL.print(F(", "));
+    if (i % 32 == 31) {
+      DEBUG_SERIAL.println();
+    }
+  }
+  DEBUG_SERIAL.println();
+#endif
+}
+#endif
+
+/*!
+ *    @brief  returns the smaller of both arguments
+ *    @param  a argument 1
+ *    @param  b argument 2
+ *    @return the smaller of both arguments
+ */
+template <typename T> constexpr T minimum(const T a, const T b) {
+  return (a < b) ? a : b;
+}
 
 /*!
  *    @brief  Create an SPI device with the given CS pin and settings
@@ -160,7 +208,6 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     // Serial.print(send, HEX);
     for (uint8_t b = startbit; b != 0;
          b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
-
       if (bitdelay_us) {
         delayMicroseconds(bitdelay_us);
       }
@@ -312,6 +359,88 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
   endTransaction();
 }
 
+void Adafruit_SPIDevice::transferFilledChunk(
+    ChunkBuffer &chunkBuffer, ChunkBufferIterator &iteratorToIncrement,
+    const uint8_t *bufferToSend, const size_t bufferLen) {
+  auto bytesToTransferLen = bufferLen;
+  auto bytesToTransferBuffer = bufferToSend;
+
+  while (bytesToTransferLen) {
+    auto bytesToTransferLenThisChunk =
+        minimum(bytesToTransferLen,
+                ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
+
+    memcpy(iteratorToIncrement, bytesToTransferBuffer,
+           bytesToTransferLenThisChunk);
+
+    bytesToTransferLen -= bytesToTransferLenThisChunk;
+    bytesToTransferBuffer += bytesToTransferLenThisChunk;
+
+    if (bytesToTransferLen) {
+      transfer(chunkBuffer, ChunkBufferSize);
+
+      iteratorToIncrement = chunkBuffer;
+
+#ifdef DEBUG_SERIAL
+      printChunk("transferFilledChunk()", chunkBuffer, ChunkBufferSize);
+#endif
+    } else {
+      iteratorToIncrement = iteratorToIncrement + bytesToTransferLenThisChunk;
+    }
+  }
+}
+
+void Adafruit_SPIDevice::transferPartiallyFilledChunk(
+    ChunkBuffer &chunkBuffer, const ChunkBufferIterator &chunkBufferIterator) {
+  if (chunkBufferIterator != chunkBuffer) {
+    auto bytesToTransferLenThisChunk = chunkBufferIterator - chunkBuffer;
+
+    transfer(chunkBuffer, bytesToTransferLenThisChunk);
+
+#ifdef DEBUG_SERIAL
+    printChunk("transferPartiallyFilledChunk()", chunkBuffer,
+               bytesToTransferLenThisChunk);
+#endif
+  }
+}
+
+void Adafruit_SPIDevice::transferAndReadChunks(
+    ChunkBuffer &chunkBuffer, ChunkBufferIterator &iteratorToIncrement,
+    uint8_t *readBuffer, const size_t readLen, const uint8_t sendVal) {
+  auto bytesToTransferLen = readLen;
+  auto readFromIterator = iteratorToIncrement;
+
+  while (bytesToTransferLen) {
+    auto bytesToTransferLenThisChunk =
+        minimum(bytesToTransferLen,
+                ChunkBufferSize - (iteratorToIncrement - chunkBuffer));
+
+    memset(iteratorToIncrement, sendVal, bytesToTransferLenThisChunk);
+
+    iteratorToIncrement += bytesToTransferLenThisChunk;
+    bytesToTransferLen -= bytesToTransferLenThisChunk;
+
+    {
+      auto tranferLen = iteratorToIncrement - chunkBuffer;
+#if defined(DEBUG_SERIAL) && defined(DEBUG_VERBOSE)
+      printChunk("transferAndReadChunks() before transmit", chunkBuffer,
+                 tranferLen);
+#endif
+      transfer(chunkBuffer, tranferLen);
+#ifdef DEBUG_SERIAL
+      printChunk("transferAndReadChunks() after transmit", chunkBuffer,
+                 tranferLen);
+#endif
+    }
+
+    memcpy(readBuffer, readFromIterator, bytesToTransferLenThisChunk);
+
+    readBuffer += bytesToTransferLenThisChunk;
+
+    readFromIterator = iteratorToIncrement = chunkBuffer;
+  }
+}
+
 /*!
  *    @brief  Write a buffer or two to the SPI device, with transaction
  * management.
@@ -326,48 +455,17 @@ void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
 bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
+  ChunkBuffer chunkBuffer;
+  ChunkBufferIterator chunkBufferIterator = chunkBuffer;
+
   beginTransactionWithAssertingCS();
 
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (prefix_len > 0) {
-      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
-    }
-    if (len > 0) {
-      _spi->transferBytes(buffer, nullptr, len);
-    }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < prefix_len; i++) {
-      transfer(prefix_buffer[i]);
-    }
-    for (size_t i = 0; i < len; i++) {
-      transfer(buffer[i]);
-    }
-  }
-  endTransactionWithDeassertingCS();
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, prefix_buffer,
+                      prefix_len);
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, buffer, len);
+  transferPartiallyFilledChunk(chunkBuffer, chunkBufferIterator);
 
-#ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
-  if ((prefix_len != 0) && (prefix_buffer != nullptr)) {
-    for (uint16_t i = 0; i < prefix_len; i++) {
-      DEBUG_SERIAL.print(F("0x"));
-      DEBUG_SERIAL.print(prefix_buffer[i], HEX);
-      DEBUG_SERIAL.print(F(", "));
-    }
-  }
-  for (uint16_t i = 0; i < len; i++) {
-    DEBUG_SERIAL.print(F("0x"));
-    DEBUG_SERIAL.print(buffer[i], HEX);
-    DEBUG_SERIAL.print(F(", "));
-    if (i % 32 == 31) {
-      DEBUG_SERIAL.println();
-    }
-  }
-  DEBUG_SERIAL.println();
-#endif
+  endTransactionWithDeassertingCS();
 
   return true;
 }
@@ -390,16 +488,7 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
-  for (uint16_t i = 0; i < len; i++) {
-    DEBUG_SERIAL.print(F("0x"));
-    DEBUG_SERIAL.print(buffer[i], HEX);
-    DEBUG_SERIAL.print(F(", "));
-    if (len % 32 == 31) {
-      DEBUG_SERIAL.println();
-    }
-  }
-  DEBUG_SERIAL.println();
+  printBuffer("read() buffer", buffer, len);
 #endif
 
   return true;
@@ -421,51 +510,15 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
 bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
                                          size_t write_len, uint8_t *read_buffer,
                                          size_t read_len, uint8_t sendvalue) {
+  ChunkBuffer chunkBuffer;
+  ChunkBufferIterator chunkBufferIterator = chunkBuffer;
+
   beginTransactionWithAssertingCS();
-  // do the writing
-#if defined(ARDUINO_ARCH_ESP32)
-  if (_spi) {
-    if (write_len > 0) {
-      _spi->transferBytes(write_buffer, nullptr, write_len);
-    }
-  } else
-#endif
-  {
-    for (size_t i = 0; i < write_len; i++) {
-      transfer(write_buffer[i]);
-    }
-  }
 
-#ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
-  for (uint16_t i = 0; i < write_len; i++) {
-    DEBUG_SERIAL.print(F("0x"));
-    DEBUG_SERIAL.print(write_buffer[i], HEX);
-    DEBUG_SERIAL.print(F(", "));
-    if (write_len % 32 == 31) {
-      DEBUG_SERIAL.println();
-    }
-  }
-  DEBUG_SERIAL.println();
-#endif
-
-  // do the reading
-  for (size_t i = 0; i < read_len; i++) {
-    read_buffer[i] = transfer(sendvalue);
-  }
-
-#ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
-  for (uint16_t i = 0; i < read_len; i++) {
-    DEBUG_SERIAL.print(F("0x"));
-    DEBUG_SERIAL.print(read_buffer[i], HEX);
-    DEBUG_SERIAL.print(F(", "));
-    if (read_len % 32 == 31) {
-      DEBUG_SERIAL.println();
-    }
-  }
-  DEBUG_SERIAL.println();
-#endif
+  transferFilledChunk(chunkBuffer, chunkBufferIterator, write_buffer,
+                      write_len);
+  transferAndReadChunks(chunkBuffer, chunkBufferIterator, read_buffer, read_len,
+                        sendvalue);
 
   endTransactionWithDeassertingCS();
 
