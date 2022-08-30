@@ -39,7 +39,19 @@ typedef enum _BitOrder {
 typedef BitOrder BusIOBitOrder;
 #endif
 
-#if defined(__AVR__) || defined(TEENSYDUINO)
+#if defined(__IMXRT1062__) // Teensy 4.x
+// *Warning* I disabled the usage of FAST_PINIO as the set/clear operations
+// used in the cpp file are not atomic and can effect multiple IO pins
+// and if an interrupt happens in between the time the code reads the register
+//  and writes out the updated value, that changes one or more other IO pins
+// on that same IO port, those change will be clobbered when the updated
+// values are written back.  A fast version can be implemented that uses the
+// ports set and clear registers which are atomic.
+// typedef volatile uint32_t BusIO_PortReg;
+// typedef uint32_t BusIO_PortMask;
+//#define BUSIO_USE_FAST_PINIO
+
+#elif defined(__AVR__) || defined(TEENSYDUINO)
 typedef volatile uint8_t BusIO_PortReg;
 typedef uint8_t BusIO_PortMask;
 #define BUSIO_USE_FAST_PINIO
@@ -88,6 +100,8 @@ public:
   void transfer(uint8_t *buffer, size_t len);
   void beginTransaction(void);
   void endTransaction(void);
+  void beginTransactionWithAssertingCS();
+  void endTransactionWithDeassertingCS();
 
 private:
   SPIClass *_spi;
