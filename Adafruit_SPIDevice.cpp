@@ -1,8 +1,5 @@
 #include "Adafruit_SPIDevice.h"
 
-#if !defined(SPI_INTERFACES_COUNT) ||                                          \
-    (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
-
 //#define DEBUG_SERIAL Serial
 
 /*!
@@ -17,6 +14,7 @@
 Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
                                        BusIOBitOrder dataOrder,
                                        uint8_t dataMode, SPIClass *theSPI) {
+#ifdef BUSIO_HAS_HW_SPI
   _cs = cspin;
   _sck = _mosi = _miso = -1;
   _spi = theSPI;
@@ -25,6 +23,14 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
   _freq = freq;
   _dataOrder = dataOrder;
   _dataMode = dataMode;
+#else
+  // unused, but needed to suppress compiler warns
+  (void)cspin;
+  (void)freq;
+  (void)dataOrder;
+  (void)dataMode;
+  (void)theSPI;
+#endif
 }
 
 /*!
@@ -68,14 +74,15 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   _dataOrder = dataOrder;
   _dataMode = dataMode;
   _begun = false;
-  _spiSetting = new SPISettings(freq, dataOrder, dataMode);
-  _spi = nullptr;
 }
 
 /*!
  *    @brief  Release memory allocated in constructors
  */
-Adafruit_SPIDevice::~Adafruit_SPIDevice() { delete _spiSetting; }
+Adafruit_SPIDevice::~Adafruit_SPIDevice() {
+  if (_spiSetting)
+    delete _spiSetting;
+}
 
 /*!
  *    @brief  Initializes SPI bus and sets CS pin high
@@ -89,7 +96,9 @@ bool Adafruit_SPIDevice::begin(void) {
   }
 
   if (_spi) { // hardware SPI
+#ifdef BUSIO_HAS_HW_SPI
     _spi->begin();
+#endif
   } else {
     pinMode(_sck, OUTPUT);
 
@@ -120,9 +129,11 @@ bool Adafruit_SPIDevice::begin(void) {
  *    @param  len    The number of bytes to transfer
  */
 void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
+  //
+  // HARDWARE SPI
+  //
   if (_spi) {
-    // hardware SPI is easy
-
+#ifdef BUSIO_HAS_HW_SPI
 #if defined(SPARK)
     _spi->transfer(buffer, buffer, len, nullptr);
 #elif defined(STM32)
@@ -133,8 +144,12 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
     _spi->transfer(buffer, len);
 #endif
     return;
+#endif
   }
 
+  //
+  // SOFTWARE SPI
+  //
   uint8_t startbit;
   if (_dataOrder == SPI_BITORDER_LSBFIRST) {
     startbit = 0x1;
@@ -145,9 +160,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
   bool towrite, lastmosi = !(buffer[0] & startbit);
   uint8_t bitdelay_us = (1000000 / _freq) / 2;
 
-  // for softSPI we'll do it by hand
   for (size_t i = 0; i < len; i++) {
-    // software SPI
     uint8_t reply = 0;
     uint8_t send = buffer[i];
 
@@ -269,7 +282,9 @@ uint8_t Adafruit_SPIDevice::transfer(uint8_t send) {
  */
 void Adafruit_SPIDevice::beginTransaction(void) {
   if (_spi) {
+#ifdef BUSIO_HAS_HW_SPI
     _spi->beginTransaction(*_spiSetting);
+#endif
   }
 }
 
@@ -278,7 +293,9 @@ void Adafruit_SPIDevice::beginTransaction(void) {
  */
 void Adafruit_SPIDevice::endTransaction(void) {
   if (_spi) {
+#ifdef BUSIO_HAS_HW_SPI
     _spi->endTransaction();
+#endif
   }
 }
 
@@ -489,5 +506,3 @@ bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
 
   return true;
 }
-
-#endif // SPI exists
