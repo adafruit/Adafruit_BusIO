@@ -5,8 +5,14 @@
 
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
-
+// HW SPI available
 #include <SPI.h>
+#define BUSIO_HAS_HW_SPI
+#else
+// SW SPI ONLY
+enum { SPI_MODE0, SPI_MODE1, SPI_MODE2, _SPI_MODE4 };
+typedef uint8_t SPIClass;
+#endif
 
 // some modern SPI definitions don't have BitOrder enum
 #if (defined(__AVR__) && !defined(ARDUINO_ARCH_MEGAAVR)) ||                    \
@@ -77,10 +83,15 @@ typedef uint32_t BusIO_PortMask;
 /**! The class which defines how we will talk to this device over SPI **/
 class Adafruit_SPIDevice {
 public:
+#ifdef BUSIO_HAS_HW_SPI
   Adafruit_SPIDevice(int8_t cspin, uint32_t freq = 1000000,
                      BusIOBitOrder dataOrder = SPI_BITORDER_MSBFIRST,
                      uint8_t dataMode = SPI_MODE0, SPIClass *theSPI = &SPI);
-
+#else
+  Adafruit_SPIDevice(int8_t cspin, uint32_t freq = 1000000,
+                     BusIOBitOrder dataOrder = SPI_BITORDER_MSBFIRST,
+                     uint8_t dataMode = SPI_MODE0, SPIClass *theSPI = nullptr);
+#endif
   Adafruit_SPIDevice(int8_t cspin, int8_t sck, int8_t miso, int8_t mosi,
                      uint32_t freq = 1000000,
                      BusIOBitOrder dataOrder = SPI_BITORDER_MSBFIRST,
@@ -104,8 +115,13 @@ public:
   void endTransactionWithDeassertingCS();
 
 private:
-  SPIClass *_spi;
-  SPISettings *_spiSetting;
+#ifdef BUSIO_HAS_HW_SPI
+  SPIClass *_spi = nullptr;
+  SPISettings *_spiSetting = nullptr;
+#else
+  uint8_t *_spi = nullptr;
+  uint8_t *_spiSetting = nullptr;
+#endif
   uint32_t _freq;
   BusIOBitOrder _dataOrder;
   uint8_t _dataMode;
@@ -119,5 +135,4 @@ private:
   bool _begun;
 };
 
-#endif // has SPI defined
 #endif // Adafruit_SPIDevice_h
