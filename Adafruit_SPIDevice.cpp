@@ -41,7 +41,8 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
  * used
  *    @param  mosipin The arduino pin number to use for MOSI, set to -1 if not
  * used
- *    @param  freq The SPI clock frequency to use, defaults to 1MHz
+ *    @param  freq The SPI clock frequency to use, defaults to 1MHz, limited to
+ * 250KHz if SW SPI
  *    @param  dataOrder The SPI data order to use for bits within each byte,
  * defaults to SPI_BITORDER_MSBFIRST
  *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
@@ -70,7 +71,12 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
   clkPinMask = digitalPinToBitMask(sckpin);
 #endif
 
-  _freq = freq;
+  if (freq > SW_SPI_MAX_FREQ) {
+    _freq = SW_SPI_MAX_FREQ;
+  } else {
+    _freq = freq;
+  }
+
   _dataOrder = dataOrder;
   _dataMode = dataMode;
   _begun = false;

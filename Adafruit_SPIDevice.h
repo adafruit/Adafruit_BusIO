@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define SW_SPI_MAX_FREQ (250000)
+
 #if !defined(SPI_INTERFACES_COUNT) ||                                          \
     (defined(SPI_INTERFACES_COUNT) && (SPI_INTERFACES_COUNT > 0))
 // HW SPI available
