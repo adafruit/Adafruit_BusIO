@@ -349,10 +349,10 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
     if (prefix_len > 0) {
-      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
+      _spi->transferBytes((uint8_t *)prefix_buffer, nullptr, prefix_len);
     }
     if (len > 0) {
-      _spi->transferBytes(buffer, nullptr, len);
+      _spi->transferBytes((uint8_t *)buffer, nullptr, len);
     }
   } else
 #endif
@@ -443,7 +443,7 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
     if (write_len > 0) {
-      _spi->transferBytes(write_buffer, nullptr, write_len);
+      _spi->transferBytes((uint8_t *)write_buffer, nullptr, write_len);
     }
   } else
 #endif
