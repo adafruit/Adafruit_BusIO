@@ -68,8 +68,8 @@ bool Adafruit_I2CDevice::detected(void) {
   // A basic scanner, see if it ACK's
   _wire->beginTransmission(_addr);
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print(F("Address 0x"));
-    DEBUG_SERIAL.print(_addr);
+  DEBUG_SERIAL.print(F("Address 0x"));
+  DEBUG_SERIAL.print(_addr);
 #endif
   if (_wire->endTransmission() == 0) {
 #ifdef DEBUG_SERIAL
