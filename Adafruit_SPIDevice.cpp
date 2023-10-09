@@ -183,9 +183,9 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         if ((_mosi != -1) && (lastmosi != towrite)) {
 #ifdef BUSIO_USE_FAST_PINIO
           if (towrite)
-            *mosiPort |= mosiPinMask;
+            *mosiPort = *mosiPort | mosiPinMask;
           else
-            *mosiPort &= ~mosiPinMask;
+            *mosiPort = *mosiPort & ~mosiPinMask;
 #else
           digitalWrite(_mosi, towrite);
 #endif
@@ -193,7 +193,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort |= clkPinMask; // Clock high
+        *clkPort = *clkPort | clkPinMask; // Clock high
 #else
         digitalWrite(_sck, HIGH);
 #endif
@@ -213,14 +213,14 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort &= ~clkPinMask; // Clock low
+        *clkPort = *clkPort & ~clkPinMask; // Clock low
 #else
         digitalWrite(_sck, LOW);
 #endif
       } else { // if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3)
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort |= clkPinMask; // Clock high
+        *clkPort = *clkPort | clkPinMask; // Clock high
 #else
         digitalWrite(_sck, HIGH);
 #endif
@@ -232,16 +232,16 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
           if (send & b)
-            *mosiPort |= mosiPinMask;
+            *mosiPort = *mosiPort | mosiPinMask;
           else
-            *mosiPort &= ~mosiPinMask;
+            *mosiPort = *mosiPort & ~mosiPinMask;
 #else
           digitalWrite(_mosi, send & b);
 #endif
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort &= ~clkPinMask; // Clock low
+        *clkPort = *clkPort & ~clkPinMask; // Clock low
 #else
         digitalWrite(_sck, LOW);
 #endif
