@@ -34,6 +34,13 @@ typedef enum _Adafruit_BusIO_SPIRegType {
    */
   ADDRESSED_OPCODE_BIT0_LOW_TO_WRITE = 3,
 
+  /*!<
+   * SHIFT_ADDR_2BITS_LEFT
+   * Used by the MLX90395 in SPI mode
+   * Address to be read will be shifted left by two bits
+   */
+  SHIFT_ADDR_2BITS_LEFT = 4,
+
 } Adafruit_BusIO_SPIRegType;
 
 /*!
