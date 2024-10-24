@@ -71,6 +71,9 @@ bool Adafruit_I2CDevice::detected(void) {
   DEBUG_SERIAL.print(F("Address 0x"));
   DEBUG_SERIAL.print(_addr);
 #endif
+#ifdef ARDUINO_ARCH_MBED
+  _wire->write(0); // forces a write request instead of a read
+#endif
   if (_wire->endTransmission() == 0) {
 #ifdef DEBUG_SERIAL
     DEBUG_SERIAL.println(F(" Detected"));
