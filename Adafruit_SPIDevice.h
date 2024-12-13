@@ -58,6 +58,11 @@ typedef BitOrder BusIOBitOrder;
 // typedef uint32_t BusIO_PortMask;
 //#define BUSIO_USE_FAST_PINIO
 
+#elif defined(__MBED__) || defined(__ZEPHYR__)
+// Boards based on RTOS cores like mbed or Zephyr are not going to expose the
+// low level registers needed for fast pin manipulation
+#undef BUSIO_USE_FAST_PINIO
+
 #elif defined(ARDUINO_ARCH_XMC)
 #undef BUSIO_USE_FAST_PINIO
 
@@ -73,7 +78,7 @@ typedef uint32_t BusIO_PortMask;
 #define BUSIO_USE_FAST_PINIO
 
 #elif (defined(__arm__) || defined(ARDUINO_FEATHER52)) &&                      \
-    !defined(ARDUINO_ARCH_MBED) && !defined(ARDUINO_ARCH_RP2040) &&            \
+    !defined(ARDUINO_ARCH_RP2040) &&                                           \
     !defined(ARDUINO_SILABS) && !defined(ARDUINO_UNOR4_MINIMA) &&              \
     !defined(ARDUINO_UNOR4_WIFI)
 typedef volatile uint32_t BusIO_PortReg;
