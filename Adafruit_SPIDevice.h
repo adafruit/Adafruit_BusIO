@@ -56,7 +56,7 @@ typedef BitOrder BusIOBitOrder;
 // ports set and clear registers which are atomic.
 // typedef volatile uint32_t BusIO_PortReg;
 // typedef uint32_t BusIO_PortMask;
-//#define BUSIO_USE_FAST_PINIO
+// #define BUSIO_USE_FAST_PINIO
 
 #elif defined(__MBED__) || defined(__ZEPHYR__)
 // Boards based on RTOS cores like mbed or Zephyr are not going to expose the

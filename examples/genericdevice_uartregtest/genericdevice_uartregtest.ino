@@ -1,17 +1,17 @@
 /*
-   Advanced example of using bstracted transport for reading and writing 
+   Advanced example of using bstracted transport for reading and writing
    register data from a UART-based device such as a TMC2209
 
-   Written with help by Claude! https://claude.ai/chat/335f50b1-3dd8-435e-9139-57ec7ca26a3c
-  (at this time chats are not shareable :(
+   Written with help by Claude!
+  https://claude.ai/chat/335f50b1-3dd8-435e-9139-57ec7ca26a3c (at this time
+  chats are not shareable :(
 */
-
 
 #include "Adafruit_BusIO_Register.h"
 #include "Adafruit_GenericDevice.h"
 
 // Debugging macros
-//#define DEBUG_SERIAL Serial
+#define DEBUG_SERIAL Serial
 
 #ifdef DEBUG_SERIAL
 #define DEBUG_PRINT(x) DEBUG_SERIAL.print(x)
@@ -29,36 +29,17 @@
 #define DEBUG_PRINT_HEX(x)
 #endif
 
-// Add IOIN register definition
 #define TMC2209_IOIN 0x06
 
 class TMC2209_UART {
 private:
-  static TMC2209_UART *_instance;
   Stream *_uart_stream;
   uint8_t _addr;
 
-  static bool uart_read_impl(uint8_t *buffer, size_t len) {
-    return _instance->uart_read_fn(buffer, len);
-  }
-
-  static bool uart_write_impl(const uint8_t *buffer, size_t len) {
-    return _instance->uart_write_fn(buffer, len);
-  }
-
-  static bool uart_readreg_impl(uint8_t *addr_buf, uint8_t addrsiz,
-                                uint8_t *data, uint16_t datalen) {
-    return _instance->uart_readreg_fn(addr_buf, addrsiz, data, datalen);
-  }
-
-  static bool uart_writereg_impl(uint8_t *addr_buf, uint8_t addrsiz,
-                                 const uint8_t *data, uint16_t datalen) {
-    return _instance->uart_writereg_fn(addr_buf, addrsiz, data, datalen);
-  }
-
-  bool uart_read_fn(uint8_t *buffer, size_t len) {
+  static bool uart_read(void *thiz, uint8_t *buffer, size_t len) {
+    TMC2209_UART *dev = (TMC2209_UART *)thiz;
     uint16_t timeout = 100;
-    while (_uart_stream->available() < len && timeout--) {
+    while (dev->_uart_stream->available() < len && timeout--) {
       delay(1);
     }
     if (timeout == 0) {
@@ -68,7 +49,7 @@ private:
 
     DEBUG_PRINT("Reading: ");
     for (size_t i = 0; i < len; i++) {
-      buffer[i] = _uart_stream->read();
+      buffer[i] = dev->_uart_stream->read();
       DEBUG_PRINT_HEX(buffer[i]);
     }
     DEBUG_PRINTLN("");
@@ -76,31 +57,33 @@ private:
     return true;
   }
 
-  bool uart_write_fn(const uint8_t *buffer, size_t len) {
+  static bool uart_write(void *thiz, const uint8_t *buffer, size_t len) {
+    TMC2209_UART *dev = (TMC2209_UART *)thiz;
     DEBUG_PRINT("Writing: ");
     for (size_t i = 0; i < len; i++) {
       DEBUG_PRINT_HEX(buffer[i]);
     }
     DEBUG_PRINTLN("");
 
-    _uart_stream->write(buffer, len);
+    dev->_uart_stream->write(buffer, len);
     return true;
   }
 
-  bool uart_readreg_fn(uint8_t *addr_buf, uint8_t addrsiz, uint8_t *data,
-                       uint16_t datalen) {
-    while (_uart_stream->available())
-      _uart_stream->read();
+  static bool uart_readreg(void *thiz, uint8_t *addr_buf, uint8_t addrsiz,
+                           uint8_t *data, uint16_t datalen) {
+    TMC2209_UART *dev = (TMC2209_UART *)thiz;
+    while (dev->_uart_stream->available())
+      dev->_uart_stream->read();
 
-    uint8_t packet[4] = {0x05, uint8_t(_addr << 1), addr_buf[0], 0x00};
+    uint8_t packet[4] = {0x05, uint8_t(dev->_addr << 1), addr_buf[0], 0x00};
 
     packet[3] = calcCRC(packet, 3);
-    if (!uart_write_impl(packet, 4))
+    if (!uart_write(thiz, packet, 4))
       return false;
 
     // Read back echo
     uint8_t echo[4];
-    if (!uart_read_impl(echo, 4))
+    if (!uart_read(thiz, echo, 4))
       return false;
 
     // Verify echo
@@ -112,7 +95,7 @@ private:
     }
 
     uint8_t response[8]; // sync + 0xFF + reg + 4 data bytes + CRC
-    if (!uart_read_impl(response, 8))
+    if (!uart_read(thiz, response, 8))
       return false;
 
     // Verify response
@@ -121,38 +104,34 @@ private:
       return false;
     }
 
-    // Verify 0xFF address byte
     if (response[1] != 0xFF) {
       DEBUG_PRINTLN("Invalid reply address");
       return false;
     }
 
-    // Verify register address matches our request
     if (response[2] != addr_buf[0]) {
       DEBUG_PRINTLN("Register mismatch");
       return false;
     }
 
-    // Verify CRC
-    uint8_t crc = calcCRC(response, 7); // Calculate CRC of all but last byte
+    uint8_t crc = calcCRC(response, 7);
     if (crc != response[7]) {
       DEBUG_PRINTLN("CRC mismatch");
       return false;
     }
 
-    // Copy the data bytes
     memcpy(data, &response[3], 4);
-
     return true;
   }
 
-  bool uart_writereg_fn(uint8_t *addr_buf, uint8_t addrsiz, const uint8_t *data,
-                        uint16_t datalen) {
-    while (_uart_stream->available())
-      _uart_stream->read();
+  static bool uart_writereg(void *thiz, uint8_t *addr_buf, uint8_t addrsiz,
+                            const uint8_t *data, uint16_t datalen) {
+    TMC2209_UART *dev = (TMC2209_UART *)thiz;
+    while (dev->_uart_stream->available())
+      dev->_uart_stream->read();
 
     uint8_t packet[8] = {0x05,
-                         uint8_t(_addr << 1),
+                         uint8_t(dev->_addr << 1),
                          uint8_t(addr_buf[0] | 0x80),
                          data[0],
                          data[1],
@@ -161,15 +140,13 @@ private:
                          0x00};
 
     packet[7] = calcCRC(packet, 7);
-    if (!uart_write_impl(packet, 8))
+    if (!uart_write(thiz, packet, 8))
       return false;
 
-    // Read and verify echo
     uint8_t echo[8];
-    if (!uart_read_impl(echo, 8))
+    if (!uart_read(thiz, echo, 8))
       return false;
 
-    // Verify echo matches what we sent
     for (uint8_t i = 0; i < 8; i++) {
       if (echo[i] != packet[i]) {
         DEBUG_PRINTLN("Write echo mismatch");
@@ -198,17 +175,13 @@ private:
 
 public:
   TMC2209_UART(Stream *serial, uint8_t addr)
-      : _uart_stream(serial), _addr(addr) {
-    _instance = this;
-  }
+      : _uart_stream(serial), _addr(addr) {}
 
   Adafruit_GenericDevice *createDevice() {
-    return new Adafruit_GenericDevice(uart_read_impl, uart_write_impl,
-                                      uart_readreg_impl, uart_writereg_impl);
+    return new Adafruit_GenericDevice(this, uart_read, uart_write, uart_readreg,
+                                      uart_writereg);
   }
 };
-
-TMC2209_UART *TMC2209_UART::_instance = nullptr;
 
 void setup() {
   Serial.begin(115200);
@@ -232,7 +205,7 @@ void setup() {
   Serial.print("IOIN = 0x");
   Serial.println(ioin_reg.read(), HEX);
 
-  // Create RegisterBits for VERSION field (bits 28:24)
+  // Create RegisterBits for VERSION field (bits 31:24)
   Adafruit_BusIO_RegisterBits version_bits(
       &ioin_reg, 8, 24); // 8 bits wide, starting at bit 24
 
