@@ -217,9 +217,9 @@ void setup() {
   delay(100);
   Serial.println("TMC2209 Generic Device register read/write test!");
 
-  Serial2.begin(115200);
+  Serial1.begin(115200);
 
-  TMC2209_UART uart(&Serial2, 0);
+  TMC2209_UART uart(&Serial1, 0);
   Adafruit_GenericDevice *device = uart.createDevice();
   device->begin();
 

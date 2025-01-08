@@ -43,9 +43,9 @@ void setup() {
 
   Serial.println("Generic Device test!");
 
-  Serial2.begin(115200);
+  Serial1.begin(115200);
 
-  Adafruit_GenericDevice *device = create_uart_device(&Serial2);
+  Adafruit_GenericDevice *device = create_uart_device(&Serial1);
   device->begin();
 
   uint8_t write_buf[4] = {0x5, 0x0, 0x0, 0x48};
