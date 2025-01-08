@@ -82,8 +82,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a300a0297429df441bc88dbb37eac1a06"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a300a0297429df441bc88dbb37eac1a06">Adafruit_BusIO_Register</a> (<a class="el" href="class_adafruit___i2_c_device.html">Adafruit_I2CDevice</a> *i2cdevice, <a class="el" href="class_adafruit___s_p_i_device.html">Adafruit_SPIDevice</a> *spidevice, Adafruit_BusIO_SPIRegType type, uint16_t reg_addr, uint8_t <a class="el" href="class_adafruit___bus_i_o___register.html#abf1eaeb0ae836be082a73dae14e7e352">width</a>=1, uint8_t byteorder=LSBFIRST, uint8_t address_width=1)</td></tr>
 <tr class="memdesc:a300a0297429df441bc88dbb37eac1a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a register we access over an I2C or SPI Device. This is a handy function because we can pass in nullptr for the unused interface, allowing libraries to mass-define all the registers.  <a href="#a300a0297429df441bc88dbb37eac1a06">More...</a><br /></td></tr>
 <tr class="separator:a300a0297429df441bc88dbb37eac1a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa8d917f7f30865cbee837a2ecd918ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#aaa8d917f7f30865cbee837a2ecd918ca">Adafruit_BusIO_Register</a> (<a class="el" href="class_adafruit___generic_device.html">Adafruit_GenericDevice</a> *genericdevice, uint16_t reg_addr, uint8_t <a class="el" href="class_adafruit___bus_i_o___register.html#abf1eaeb0ae836be082a73dae14e7e352">width</a>=1, uint8_t byteorder=LSBFIRST, uint8_t address_width=1)</td></tr>
+<tr class="memdesc:aaa8d917f7f30865cbee837a2ecd918ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a register we access over a GenericDevice.  <a href="#aaa8d917f7f30865cbee837a2ecd918ca">More...</a><br /></td></tr>
+<tr class="separator:aaa8d917f7f30865cbee837a2ecd918ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#a2b48e23dacbb7cffc0eb07dcebcfba6f">read</a> (uint8_t *buffer, uint8_t len)</td></tr>
-<tr class="memdesc:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a buffer of data from the register location.  <a href="#a2b48e23dacbb7cffc0eb07dcebcfba6f">More...</a><br /></td></tr>
+<tr class="memdesc:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a number of bytes from a register into a buffer.  <a href="#a2b48e23dacbb7cffc0eb07dcebcfba6f">More...</a><br /></td></tr>
 <tr class="separator:a2b48e23dacbb7cffc0eb07dcebcfba6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adca04654563a7c68a580533197366f61"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___bus_i_o___register.html#adca04654563a7c68a580533197366f61">read</a> (uint8_t *value)</td></tr>
 <tr class="memdesc:adca04654563a7c68a580533197366f61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read 1 byte of data from the register location.  <a href="#adca04654563a7c68a580533197366f61">More...</a><br /></td></tr>
@@ -126,7 +129,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>The class which defines a device register (a location to read/write data from) </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7de4a4cbb3e8cdfebac31344e8ab6c8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7de4a4cbb3e8cdfebac31344e8ab6c8c">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7de4a4cbb3e8cdfebac31344e8ab6c8c">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +187,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a89e57552743a5f15c99cb7aa27b3ca13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89e57552743a5f15c99cb7aa27b3ca13">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a89e57552743a5f15c99cb7aa27b3ca13">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,7 +252,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a300a0297429df441bc88dbb37eac1a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a300a0297429df441bc88dbb37eac1a06">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a300a0297429df441bc88dbb37eac1a06">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,6 +323,64 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aaa8d917f7f30865cbee837a2ecd918ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa8d917f7f30865cbee837a2ecd918ca">&#9670;&nbsp;</a></span>Adafruit_BusIO_Register() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Adafruit_BusIO_Register::Adafruit_BusIO_Register </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_adafruit___generic_device.html">Adafruit_GenericDevice</a> *&#160;</td>
+          <td class="paramname"><em>genericdevice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>reg_addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>width</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>byteorder</em> = <code>LSBFIRST</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>address_width</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a register we access over a GenericDevice. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">genericdevice</td><td>Generic device to use </td></tr>
+    <tr><td class="paramname">reg_addr</td><td>Register address we will read/write </td></tr>
+    <tr><td class="paramname">width</td><td>Width of the register in bytes (1-4) </td></tr>
+    <tr><td class="paramname">byteorder</td><td>Byte order of register data (LSBFIRST or MSBFIRST) </td></tr>
+    <tr><td class="paramname">address_width</td><td>Width of the register address in bytes (1 or 2) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a2b48e23dacbb7cffc0eb07dcebcfba6f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b48e23dacbb7cffc0eb07dcebcfba6f">&#9670;&nbsp;</a></span>read() <span class="overload">[1/4]</span></h2>
@@ -347,15 +408,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Read a buffer of data from the register location. </p>
+<p>Read a number of bytes from a register into a buffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffer</td><td>Pointer to data to read into </td></tr>
-    <tr><td class="paramname">len</td><td>Number of bytes to read </td></tr>
+    <tr><td class="paramname">buffer</td><td>Buffer to read data into </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes to read into the buffer </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True on successful write (only really useful for I2C as SPI is uncheckable) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on successful read, otherwise false </dd></dl>
 
 </div>
 </div>

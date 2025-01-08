@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['transfer',['transfer',['../class_adafruit___s_p_i_device.html#ac60964386f37b2c498fc1b1540f61889',1,'Adafruit_SPIDevice::transfer(uint8_t send)'],['../class_adafruit___s_p_i_device.html#a155f5efd84dbc240c987f4066265b840',1,'Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len)']]]
+  ['setaddress',['setAddress',['../class_adafruit___bus_i_o___register.html#a08ddf29ed836c712e2a2f050e1ae3bcd',1,'Adafruit_BusIO_Register']]],
+  ['setaddresswidth',['setAddressWidth',['../class_adafruit___bus_i_o___register.html#a421a7c74ab0faafe243060af1883717a',1,'Adafruit_BusIO_Register']]],
+  ['setspeed',['setSpeed',['../class_adafruit___i2_c_device.html#a784c398626837ef911ce7e69b0807be7',1,'Adafruit_I2CDevice']]],
+  ['setwidth',['setWidth',['../class_adafruit___bus_i_o___register.html#a478ae4ca787304ead47a56994fbdb840',1,'Adafruit_BusIO_Register']]]
 ];
