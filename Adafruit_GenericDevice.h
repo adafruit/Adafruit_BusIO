@@ -34,12 +34,17 @@ public:
                      uint16_t bufsiz);
 
 protected:
+  /*! @brief Function pointer for reading raw data from the device */
   busio_genericdevice_read_t _read_func;
+  /*! @brief Function pointer for writing raw data to the device */
   busio_genericdevice_write_t _write_func;
+  /*! @brief Function pointer for reading a 'register' from the device */
   busio_genericdevice_readreg_t _readreg_func;
+  /*! @brief Function pointer for writing a 'register' to the device */
   busio_genericdevice_writereg_t _writereg_func;
 
-  bool _begun;
+  bool _begun; ///< whether we have initialized yet (in case the function needs
+               ///< to do something)
 };
 
 #endif // ADAFRUIT_GENERICDEVICE_H

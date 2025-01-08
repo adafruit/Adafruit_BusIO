@@ -210,6 +210,12 @@ uint32_t Adafruit_BusIO_Register::read(void) {
  */
 uint32_t Adafruit_BusIO_Register::readCached(void) { return _cached; }
 
+/*!
+   @brief Read a number of bytes from a register into a buffer
+   @param buffer Buffer to read data into
+   @param len Number of bytes to read into the buffer
+   @return true on successful read, otherwise false
+*/
 bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
   uint8_t addrbuffer[2] = {(uint8_t)(_address & 0xFF),
                            (uint8_t)(_address >> 8)};
