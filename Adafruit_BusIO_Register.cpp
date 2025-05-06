@@ -244,6 +244,10 @@ bool Adafruit_BusIO_Register::read(uint8_t *buffer, uint8_t len) {
     if (_spiregtype == AD8_HIGH_TOREAD_AD7_HIGH_TOINC) {
       addrbuffer[0] |= 0x80 | 0x40;
     }
+    if (_spiregtype == SHIFT_ADDR_2BITS_LEFT) {
+      addrbuffer[0] == addrbuffer[0] << 2;
+    }
+	
     return _spidevice->write_then_read(addrbuffer, _addrwidth, buffer, len);
   }
   if (_genericdevice) {
