@@ -80,6 +80,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6894812dfd41b7080a35e5be635d687f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___generic_device.html#a6894812dfd41b7080a35e5be635d687f">begin</a> (void)</td></tr>
 <tr class="memdesc:a6894812dfd41b7080a35e5be635d687f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple begin function (doesn't do much at this time)  <a href="#a6894812dfd41b7080a35e5be635d687f">More...</a><br /></td></tr>
 <tr class="separator:a6894812dfd41b7080a35e5be635d687f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f7b67b4a04a98bf17314d266a0d4ef5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___generic_device.html#a5f7b67b4a04a98bf17314d266a0d4ef5">end</a> (void)</td></tr>
+<tr class="memdesc:a5f7b67b4a04a98bf17314d266a0d4ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks the GenericDevice as no longer in use.  <a href="#a5f7b67b4a04a98bf17314d266a0d4ef5">More...</a><br /></td></tr>
+<tr class="separator:a5f7b67b4a04a98bf17314d266a0d4ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90de855895eb2b2a431569107501cd95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___generic_device.html#a90de855895eb2b2a431569107501cd95">read</a> (uint8_t *buffer, size_t len)</td></tr>
 <tr class="memdesc:a90de855895eb2b2a431569107501cd95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data into a buffer.  <a href="#a90de855895eb2b2a431569107501cd95">More...</a><br /></td></tr>
 <tr class="separator:a90de855895eb2b2a431569107501cd95"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,6 +197,27 @@ busio_genericdevice_writereg_t&#160;</td><td class="memItemRight" valign="bottom
 
 <p>Simple begin function (doesn't do much at this time) </p>
 <dl class="section return"><dt>Returns</dt><dd>true always </dd></dl>
+
+</div>
+</div>
+<a id="a5f7b67b4a04a98bf17314d266a0d4ef5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f7b67b4a04a98bf17314d266a0d4ef5">&#9670;&nbsp;</a></span>end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Adafruit_GenericDevice::end </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Marks the GenericDevice as no longer in use. </p>
+<dl class="section note"><dt>Note</dt><dd>: Since this is a GenericDevice, if you are using this with a Serial object, this does NOT disable serial communication or release the RX/TX pins. That must be done manually by calling Serial.end(). </dd></dl>
 
 </div>
 </div>
