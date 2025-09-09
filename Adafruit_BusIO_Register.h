@@ -80,7 +80,7 @@ public:
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_SERIAL)
   void print(Stream *s = &Serial);
   void println(Stream *s = &Serial);
-#elif
+#else
   void print(Stream *s);
   void println(Stream *s);
 #endif
