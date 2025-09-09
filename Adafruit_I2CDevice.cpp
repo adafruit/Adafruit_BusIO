@@ -1,6 +1,6 @@
 #include "Adafruit_I2CDevice.h"
 
-//#define DEBUG_SERIAL Serial
+// #define DEBUG_SERIAL Serial
 
 /*!
  *    @brief  Create an I2C device at a given address
@@ -23,8 +23,8 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
 /*!
  *    @brief  Initializes and does basic address detection
  *    @param  addr_detect Whether we should attempt to detect the I2C address
- * with a scan. 99% of sensors/devices don't mind but once in a while, they spaz
- * on a scan!
+ * with a scan. 99% of sensors/devices don't mind, but once in a while they
+ * don't respond well to a scan!
  *    @return True if I2C initialized and a device with the addr found
  */
 bool Adafruit_I2CDevice::begin(bool addr_detect) {
@@ -67,14 +67,21 @@ bool Adafruit_I2CDevice::detected(void) {
 
   // A basic scanner, see if it ACK's
   _wire->beginTransmission(_addr);
+#ifdef DEBUG_SERIAL
+  DEBUG_SERIAL.print(F("Address 0x"));
+  DEBUG_SERIAL.print(_addr, HEX);
+#endif
+#ifdef ARDUINO_ARCH_MBED
+  _wire->write(0); // forces a write request instead of a read
+#endif
   if (_wire->endTransmission() == 0) {
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println(F("Detected"));
+    DEBUG_SERIAL.println(F(" Detected"));
 #endif
     return true;
   }
 #ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.println(F("Not detected"));
+  DEBUG_SERIAL.println(F(" Not detected"));
 #endif
   return false;
 }

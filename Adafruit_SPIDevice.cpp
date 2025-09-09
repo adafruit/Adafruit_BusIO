@@ -1,6 +1,6 @@
 #include "Adafruit_SPIDevice.h"
 
-//#define DEBUG_SERIAL Serial
+// #define DEBUG_SERIAL Serial
 
 /*!
  *    @brief  Create an SPI device with the given CS pin and settings
@@ -183,9 +183,9 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         if ((_mosi != -1) && (lastmosi != towrite)) {
 #ifdef BUSIO_USE_FAST_PINIO
           if (towrite)
-            *mosiPort |= mosiPinMask;
+            *mosiPort = *mosiPort | mosiPinMask;
           else
-            *mosiPort &= ~mosiPinMask;
+            *mosiPort = *mosiPort & ~mosiPinMask;
 #else
           digitalWrite(_mosi, towrite);
 #endif
@@ -193,7 +193,7 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort |= clkPinMask; // Clock high
+        *clkPort = *clkPort | clkPinMask; // Clock high
 #else
         digitalWrite(_sck, HIGH);
 #endif
@@ -213,14 +213,14 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort &= ~clkPinMask; // Clock low
+        *clkPort = *clkPort & ~clkPinMask; // Clock low
 #else
         digitalWrite(_sck, LOW);
 #endif
       } else { // if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3)
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort |= clkPinMask; // Clock high
+        *clkPort = *clkPort | clkPinMask; // Clock high
 #else
         digitalWrite(_sck, HIGH);
 #endif
@@ -232,16 +232,16 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
         if (_mosi != -1) {
 #ifdef BUSIO_USE_FAST_PINIO
           if (send & b)
-            *mosiPort |= mosiPinMask;
+            *mosiPort = *mosiPort | mosiPinMask;
           else
-            *mosiPort &= ~mosiPinMask;
+            *mosiPort = *mosiPort & ~mosiPinMask;
 #else
           digitalWrite(_mosi, send & b);
 #endif
         }
 
 #ifdef BUSIO_USE_FAST_PINIO
-        *clkPort &= ~clkPinMask; // Clock low
+        *clkPort = *clkPort & ~clkPinMask; // Clock low
 #else
         digitalWrite(_sck, LOW);
 #endif
@@ -349,10 +349,10 @@ bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
     if (prefix_len > 0) {
-      _spi->transferBytes(prefix_buffer, nullptr, prefix_len);
+      _spi->transferBytes((uint8_t *)prefix_buffer, nullptr, prefix_len);
     }
     if (len > 0) {
-      _spi->transferBytes(buffer, nullptr, len);
+      _spi->transferBytes((uint8_t *)buffer, nullptr, len);
     }
   } else
 #endif
@@ -443,7 +443,7 @@ bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
 #if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
     if (write_len > 0) {
-      _spi->transferBytes(write_buffer, nullptr, write_len);
+      _spi->transferBytes((uint8_t *)write_buffer, nullptr, write_len);
     }
   } else
 #endif
