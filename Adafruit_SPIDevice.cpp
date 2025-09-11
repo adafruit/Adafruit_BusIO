@@ -195,51 +195,74 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       if (bitdelay_us) {
         delayMicroseconds(bitdelay_us);
       }
-
+      
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         towrite = send & b;
         if ((_mosi != -1) && (lastmosi != towrite)) {
           BUSIO_WRITE_MOSI(towrite);
           lastmosi = towrite;
         }
-
+        
         BUSIO_SET_CLOCK_HIGH();
-
+        
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-
+        
         if (_miso != -1) {
           if (BUSIO_READ_MISO())
             reply |= b;
-          }
         }
-
+        
         BUSIO_SET_CLOCK_LOW();
-
-      } else { // if (_dataMode == SPI_MODE1 || _dataMode == SPI_MODE3)
-
-        BUSIO_SET_CLOCK_HIGH();
-
+        
+      } else if (_dataMode == SPI_MODE3) {
+        
+        if (_mosi != -1) {   // transmit on falling edge
+          BUSIO_WRITE_MOSI(send & b);
+        }
+        
+        BUSIO_SET_CLOCK_LOW();
+        
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-
+        
+        BUSIO_SET_CLOCK_HIGH();
+        
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+        
+        if (_miso != -1) {  // read on rising edge
+          if (BUSIO_READ_MISO()) {
+            reply |= b;
+          }
+        }
+      
+      }  else { // || _dataMode == SPI_MODE1)
+        
+        BUSIO_SET_CLOCK_HIGH();
+        
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+        
         if (_mosi != -1) {
           BUSIO_WRITE_MOSI(send & b);
         }
-
+        
         BUSIO_SET_CLOCK_LOW();
-
+        
         if (_miso != -1) {
           if (BUSIO_READ_MISO()) {
             reply |= b;
           }
         }
       }
-      if (_miso != -1) {
-        buffer[i] = reply;
-      }
+    }
+    if (_miso != -1) {
+      buffer[i] = reply;
     }
   }
   return;
