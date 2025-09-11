@@ -2,17 +2,17 @@
 
 // #define DEBUG_SERIAL Serial
 
-
 #ifdef BUSIO_USE_FAST_PINIO
 #define BUSIO_SET_CLOCK_LOW() (*clkPort = *clkPort & ~clkPinMask)
 #define BUSIO_SET_CLOCK_HIGH() (*clkPort = *clkPort | clkPinMask)
 #define BUSIO_READ_MISO() (*misoPort & misoPinMask)
-#define BUSIO_WRITE_MOSI(value) do { \
-    if (value) \
-        *mosiPort = *mosiPort | mosiPinMask; \
-    else \
-        *mosiPort = *mosiPort & ~mosiPinMask; \
-} while(0)
+#define BUSIO_WRITE_MOSI(value)                                                \
+  do {                                                                         \
+    if (value)                                                                 \
+      *mosiPort = *mosiPort | mosiPinMask;                                     \
+    else                                                                       \
+      *mosiPort = *mosiPort & ~mosiPinMask;                                    \
+  } while (0)
 #else
 #define BUSIO_SET_CLOCK_LOW() digitalWrite(_sck, LOW)
 #define BUSIO_SET_CLOCK_HIGH() digitalWrite(_sck, HIGH)
@@ -195,65 +195,65 @@ void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
       if (bitdelay_us) {
         delayMicroseconds(bitdelay_us);
       }
-      
+
       if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
         towrite = send & b;
         if ((_mosi != -1) && (lastmosi != towrite)) {
           BUSIO_WRITE_MOSI(towrite);
           lastmosi = towrite;
         }
-        
+
         BUSIO_SET_CLOCK_HIGH();
-        
+
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-        
+
         if (_miso != -1) {
           if (BUSIO_READ_MISO())
             reply |= b;
         }
-        
+
         BUSIO_SET_CLOCK_LOW();
-        
+
       } else if (_dataMode == SPI_MODE3) {
-        
-        if (_mosi != -1) {   // transmit on falling edge
+
+        if (_mosi != -1) { // transmit on falling edge
           BUSIO_WRITE_MOSI(send & b);
         }
-        
+
         BUSIO_SET_CLOCK_LOW();
-        
+
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-        
+
         BUSIO_SET_CLOCK_HIGH();
-        
+
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-        
-        if (_miso != -1) {  // read on rising edge
+
+        if (_miso != -1) { // read on rising edge
           if (BUSIO_READ_MISO()) {
             reply |= b;
           }
         }
-      
-      }  else { // || _dataMode == SPI_MODE1)
-        
+
+      } else { // || _dataMode == SPI_MODE1)
+
         BUSIO_SET_CLOCK_HIGH();
-        
+
         if (bitdelay_us) {
           delayMicroseconds(bitdelay_us);
         }
-        
+
         if (_mosi != -1) {
           BUSIO_WRITE_MOSI(send & b);
         }
-        
+
         BUSIO_SET_CLOCK_LOW();
-        
+
         if (_miso != -1) {
           if (BUSIO_READ_MISO()) {
             reply |= b;
